@@ -1,0 +1,21 @@
+# VS
+.vs/
+*.user
+*.suo
+usecase.md
+
+# Build
+PublishProfiles/
+bin/
+obj/
+TestResults/
+*.cache
+*.log
+
+# NuGet
+packages/
+project.lock.json
+
+# IIS Express
+.vscode/
+*.db

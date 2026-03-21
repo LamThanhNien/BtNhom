@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="ASC.Business/ASC.Business.csproj" />
+  <Project Path="ASC.DataAccess/ASC.DataAccess.csproj" />
+  <Project Path="ASC.Model/ASC.Model.csproj" />
+  <Project Path="ASC.Utilities/ASC.Utilities.csproj" />
+  <Project Path="ASC.Web/ASC.Web.csproj" />
+</Solution>
