@@ -1,57 +1,43 @@
-﻿@inject Microsoft.Extensions.Options.IOptions<ASC.Web.Models.ApplicationSettings> settings
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - @settings.Value.ApplicationName</title>
+@{
+    Layout = "_MasterLayout";
+}
 
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <!-- Materialize CSS -->
-    <link rel="stylesheet" href="~/css/materialize.css" />
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <nav class="light-blue lighten-1" role="navigation">
-        <div class="nav-wrapper container">
-            <a id="logo-container" href="#" class="brand-logo">@settings.Value.ApplicationName</a>
-            <ul class="right hide-on-med-and-down">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Service Requests</a></li>
-                <li><a href="#">Master Data</a></li>
-                <li><a asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
-            </ul>
-            <ul id="nav-mobile" class="sidenav">
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Service Requests</a></li>
-                <li><a href="#">Master Data</a></li>
-                <li><a asp-area="Identity" asp-page="/Account/Logout">Logout</a></li>
-            </ul>
-            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+<header>
+    <nav class="light-blue darken-1">
+        <div class="nav-wrapper" style="padding:0 20px;">
+            <a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
+            <span class="brand-logo" style="position:static; margin-left:10px;">Dashboard</span>
         </div>
     </nav>
+</header>
 
-    <main>
-        @RenderBody()
-    </main>
+<ul id="slide-out" class="sidenav sidenav-fixed">
+    <li><div class="user-view light-blue darken-1"><a href="#"><span class="white-text name">Automobile Service Center</span></a></div></li>
+    <li><a asp-area="ServiceRequests" asp-controller="Dashboard" asp-action="Dashboard"><i class="material-icons">dashboard</i>Dashboard</a></li>
+    <li><a href="#"><i class="material-icons">supervisor_account</i>User Administration</a></li>
+    <li><a href="#"><i class="material-icons">build</i>Service Requests</a></li>
+    <li><a href="#"><i class="material-icons">notifications</i>Notifications</a></li>
+    <li><a href="#"><i class="material-icons">local_offer</i>Promotions</a></li>
+    <li><a href="#"><i class="material-icons">settings</i>Settings</a></li>
+    <li><a asp-area="Identity" asp-page="/Account/Logout"><i class="material-icons">exit_to_app</i>Logout</a></li>
+</ul>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<main style="margin-left:300px; padding:20px; min-height:calc(100vh - 120px);">
+    @RenderBody()
+</main>
 
-    <!-- Materialize JS -->
-    <script src="~/js/materialize.js"></script>
+<footer class="page-footer light-blue darken-1" style="margin-left:300px;">
+    <div class="footer-copyright">
+        <div class="container white-text">
+            Automobile Service Center
+        </div>
+    </div>
+</footer>
 
-    <!-- Khởi tạo Materialize components -->
+@section Scripts {
     <script>
         $(document).ready(function(){
-        $('.sidenav').sidenav();
+            $('.sidenav').sidenav();
         });
     </script>
-
-    @RenderSection("Scripts", required: false)
-</body>
-</html>
+}

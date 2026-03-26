@@ -1,9 +1,7 @@
-﻿namespace ASC.Web.Models
+namespace ASC.Web.Models
 {
     public class ApplicationSettings
     {
-        public string ApplicationName { get; set; }
-        public string Version { get; set; }
-        public string SupportEmail { get; set; }
+        public string ApplicationTitle { get; set; } = string.Empty;
     }
 }

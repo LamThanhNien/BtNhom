@@ -1,0 +1,22 @@
+{
+  "MenuItems": [
+    {
+      "DisplayName": "Dashboard",
+      "MaterialIcon": "dashboard",
+      "Link": "/ServiceRequests/Dashboard/Dashboard",
+      "IsNested": false,
+      "Sequence": 1,
+      "UserRoles": [ "User", "Engineer", "Admin" ],
+      "NestedItems": []
+    },
+    {
+      "DisplayName": "Logout",
+      "MaterialIcon": "exit_to_app",
+      "Link": "/Identity/Account/Logout",
+      "IsNested": false,
+      "Sequence": 8,
+      "UserRoles": [ "User", "Engineer", "Admin" ],
+      "NestedItems": []
+    }
+  ]
+}

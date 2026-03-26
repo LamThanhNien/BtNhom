@@ -1,4 +1,4 @@
-﻿using ASC.Model;
+using ASC.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +24,6 @@ namespace ASC.Web.Data
 
         public async Task SeedAsync()
         {
-            // Tạo roles
             var roles = new[] { Constants.AdminRole, Constants.ServiceEngineerRole, Constants.CustomerRole };
             foreach (var role in roles)
             {
@@ -34,8 +33,9 @@ namespace ASC.Web.Data
                 }
             }
 
-            // Tạo admin user mặc định
-            var adminEmail = "admin@asc.com";
+            var adminEmail = _configuration["IdentitySeed:AdminEmail"] ?? "admin@asc.com";
+            var adminPassword = _configuration["IdentitySeed:AdminPassword"] ?? "Admin@123";
+
             if (await _userManager.FindByEmailAsync(adminEmail) == null)
             {
                 var adminUser = new IdentityUser
@@ -44,14 +44,14 @@ namespace ASC.Web.Data
                     Email = adminEmail,
                     EmailConfirmed = true
                 };
-                var result = await _userManager.CreateAsync(adminUser, "Admin@123");
+
+                var result = await _userManager.CreateAsync(adminUser, adminPassword);
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(adminUser, Constants.AdminRole);
                 }
             }
 
-            // Seed MasterData từ appsettings.json
             await SeedMasterDataAsync("MasterData:ServiceStatus", "ServiceStatus");
             await SeedMasterDataAsync("MasterData:PromotionTypes", "PromotionType");
         }
@@ -61,7 +61,6 @@ namespace ASC.Web.Data
             var section = _configuration.GetSection(configKey);
             if (!section.Exists()) return;
 
-            // Tìm hoặc tạo MasterDataKey
             var keyEntity = await _context.MasterDataKeys.FirstOrDefaultAsync(k => k.Key == masterKeyName);
             if (keyEntity == null)
             {
@@ -77,7 +76,6 @@ namespace ASC.Web.Data
                 await _context.SaveChangesAsync();
             }
 
-            // Lấy danh sách giá trị từ config
             var values = section.GetChildren().Select(c => new MasterDataValue
             {
                 Id = Guid.NewGuid().ToString(),
@@ -90,7 +88,6 @@ namespace ASC.Web.Data
                 CreatedDate = DateTime.UtcNow
             }).ToList();
 
-            // Thêm nếu chưa tồn tại
             foreach (var val in values)
             {
                 if (!await _context.MasterDataValues.AnyAsync(v => v.Value == val.Value && v.MasterDataKeyId == keyEntity.Id))

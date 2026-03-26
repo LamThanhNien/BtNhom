@@ -1,0 +1,9 @@
+@model List<ASC.Web.Models.Navigation.NavigationItem>
+<ul class="right hide-on-med-and-down">
+@foreach (var item in Model)
+{
+    <li>
+        <a href="@item.Link"><i class="material-icons left">@item.MaterialIcon</i>@item.DisplayName</a>
+    </li>
+}
+</ul>

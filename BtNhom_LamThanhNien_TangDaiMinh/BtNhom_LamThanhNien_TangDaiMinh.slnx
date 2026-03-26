@@ -4,4 +4,5 @@
   <Project Path="ASC.Model/ASC.Model.csproj" />
   <Project Path="ASC.Utilities/ASC.Utilities.csproj" />
   <Project Path="ASC.Web/ASC.Web.csproj" />
-</Solution>
+  <Project Path="ASC.Tests/ASC.Tests.csproj" />`n</Solution>
+
