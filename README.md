@@ -4,4 +4,4 @@
 
 ## 🎬 VIDEO DEMO LAB 7 - LAB8
 
-[![XEM VIDEO TRỰC TIẾP](https://img.youtube.com/vi/CMM-wtHF1ok.jpg)](https://www.youtube.com/watch?v=CMM-wtHF1ok)
+[![XEM VIDEO TRỰC TIẾP](https://img.youtube.com/vi/CMM-wtHF1ok/0.jpg)](https://www.youtube.com/watch?v=CMM-wtHF1ok)
