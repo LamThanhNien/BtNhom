@@ -40,6 +40,7 @@ public class LoginModel : PageModel
 
     public async Task OnGetAsync(string? returnUrl = null)
     {
+        HttpContext.Session.Clear();
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
         ReturnUrl = returnUrl;

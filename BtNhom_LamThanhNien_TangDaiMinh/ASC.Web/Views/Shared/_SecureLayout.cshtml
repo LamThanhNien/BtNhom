@@ -1,35 +1,117 @@
 @{
     Layout = "_MasterLayout";
 }
+@using System.Security.Claims
 
-<header>
-    <nav class="light-blue darken-1">
-        <div class="nav-wrapper" style="padding:0 20px;">
-            <a href="#" data-target="slide-out" class="sidenav-trigger show-on-large"><i class="material-icons">menu</i></a>
-            <span class="brand-logo" style="position:static; margin-left:10px;">Dashboard</span>
+<!-- Header -->
+<header class="secureLayout">
+    <nav class="top-nav blue-grey lighten-1">
+        <div class="nav-wrapper row valign-wrapper">
+            <div class="col s12 valign-wrapper">
+                <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <h5><a class="page-title">Automobile Service Center</a></h5>
+            </div>
         </div>
     </nav>
 </header>
 
-<ul id="slide-out" class="sidenav sidenav-fixed">
-    <li><div class="user-view light-blue darken-1"><a href="#"><span class="white-text name">Automobile Service Center</span></a></div></li>
-    <li><a asp-area="ServiceRequests" asp-controller="Dashboard" asp-action="Dashboard"><i class="material-icons">dashboard</i>Dashboard</a></li>
-    <li><a href="#"><i class="material-icons">supervisor_account</i>User Administration</a></li>
-    <li><a href="#"><i class="material-icons">build</i>Service Requests</a></li>
-    <li><a href="#"><i class="material-icons">notifications</i>Notifications</a></li>
-    <li><a href="#"><i class="material-icons">local_offer</i>Promotions</a></li>
-    <li><a href="#"><i class="material-icons">settings</i>Settings</a></li>
-    <li><a asp-area="Identity" asp-page="/Account/Logout"><i class="material-icons">exit_to_app</i>Logout</a></li>
+<!-- Side NavBar -->
+<ul id="nav-mobile" class="sidenav sidenav-fixed">
+    <li>
+        <div class="user-view">
+            <div class="background blue-grey lighten-1"></div>
+            <a href="#user"><img class="circle" src="~/images/male.png" /></a>
+            <a href="#name"><span class="white-text name">@User.Identity?.Name</span></a>
+            <a href="#email"><span class="white-text email">@User.FindFirst(ClaimTypes.Email)?.Value</span></a>
+        </div>
+    </li>
+    <li>
+        <a class="collapsible-header" asp-area="ServiceRequests" asp-controller="Dashboard" asp-action="Dashboard">
+            <i class="material-icons">dashboard</i>Dashboard
+        </a>
+    </li>
+    @if (User.IsInRole("Admin"))
+    {
+        <li>
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a class="collapsible-header">User Administration<i class="material-icons">supervisor_account</i></a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li><a href="#!"><i class="material-icons">account_box</i>Customers</a></li>
+                            <li><a href="#!"><i class="material-icons">person_add</i>Provision User</a></li>
+                            <li><a href="#!"><i class="material-icons">remove_circle</i>Deactivate User</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    }
+    <li>
+        <a class="collapsible-header" href="#!"><i class="material-icons">perm_data_setting</i>Service Requests</a>
+    </li>
+    <li>
+        <a class="collapsible-header" href="#!"><i class="material-icons">message</i>Service Notifications</a>
+    </li>
+    <li>
+        <a class="collapsible-header" href="#!"><i class="material-icons">inbox</i>Promotions</a>
+    </li>
+    <li>
+        <a class="collapsible-header" href="#!"><i class="material-icons">settings</i>Settings</a>
+    </li>
+    <li>
+        <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+            <button type="submit" class="collapsible-header">
+                <i class="material-icons">exit_to_app</i>Logout
+            </button>
+        </form>
+    </li>
 </ul>
 
-<main style="margin-left:300px; padding:20px; min-height:calc(100vh - 120px);">
-    @RenderBody()
+<!-- Render Body -->
+<main class="secureLayout">
+    <div class="row margin-bottom-0px">
+        <div class="col s12">
+            @RenderBody()
+        </div>
+    </div>
 </main>
 
-<footer class="page-footer light-blue darken-1" style="margin-left:300px;">
-    <div class="footer-copyright">
-        <div class="container white-text">
-            Automobile Service Center
+<!-- Footer -->
+<footer class="page-footer blue-grey lighten-1 secureLayout">
+    <div class="row">
+        <div class="col l6 s12">
+            <h5 class="white-text">About Us</h5>
+            <p class="grey-text text-lighten-4">
+                Automobile Service Center is certified Company to perform car services. Our Workshop
+                operations started in the month of October, 2010. We primarily focus on providing better
+                services to our customers, and as a result of the hard work we were awarded as the "Best Service"
+                for the year 2008 and that too within a short period of time.
+            </p>
+        </div>
+        <div class="col l3 s12">
+            <h5 class="white-text">Additional Services</h5>
+            <ul>
+                <li><a class="white-text" href="#!">Services</a></li>
+                <li><a class="white-text" href="#!">Finance</a></li>
+                <li><a class="white-text" href="#!">Used Cars</a></li>
+                <li><a class="white-text" href="#!">Insurance</a></li>
+                <li><a class="white-text" href="#!">Driving School</a></li>
+            </ul>
+        </div>
+        <div class="col l3 s12">
+            <h5 class="white-text">Connect</h5>
+            <ul>
+                <li><a class="white-text" href="#!">Facebook</a></li>
+                <li><a class="white-text" href="#!">LinkedIn</a></li>
+                <li><a class="white-text" href="#!">Twitter</a></li>
+                <li><a class="white-text" href="#!">Youtube</a></li>
+            </ul>
+        </div>
+        <div class="footer-copyright row margin-bottom-0px">
+            <div class="col s12">
+                Powered by <a class="brown-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+            </div>
         </div>
     </div>
 </footer>
@@ -38,6 +120,7 @@
     <script>
         $(document).ready(function(){
             $('.sidenav').sidenav();
+            $('.collapsible').collapsible();
         });
     </script>
 }

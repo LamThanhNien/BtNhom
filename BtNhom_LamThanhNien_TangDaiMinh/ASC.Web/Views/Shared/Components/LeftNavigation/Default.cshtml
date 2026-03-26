@@ -1,9 +1,26 @@
 @model List<ASC.Web.Models.Navigation.NavigationItem>
-<ul class="right hide-on-med-and-down">
+@using System
+
+<ul class="asc-menu-list">
 @foreach (var item in Model)
 {
     <li>
-        <a href="@item.Link"><i class="material-icons left">@item.MaterialIcon</i>@item.DisplayName</a>
+        @if (string.Equals(item.Link, "/Identity/Account/Logout", StringComparison.OrdinalIgnoreCase))
+        {
+            <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="asc-menu-form">
+                <button type="submit" class="asc-menu-link">
+                    <i class="material-icons">@item.MaterialIcon</i>
+                    <span>@item.DisplayName</span>
+                </button>
+            </form>
+        }
+        else
+        {
+            <a class="asc-menu-link" href="@item.Link">
+                <i class="material-icons">@item.MaterialIcon</i>
+                <span>@item.DisplayName</span>
+            </a>
+        }
     </li>
 }
 </ul>

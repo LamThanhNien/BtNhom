@@ -24,7 +24,7 @@ namespace ASC.Web.Data
 
         public async Task SeedAsync()
         {
-            var roles = new[] { Constants.AdminRole, Constants.ServiceEngineerRole, Constants.CustomerRole };
+            var roles = new[] { Constants.AdminRole, Constants.ServiceEngineerRole, Constants.CustomerRole, "Engineer", "User" };
             foreach (var role in roles)
             {
                 if (!await _roleManager.RoleExistsAsync(role))
@@ -49,6 +49,25 @@ namespace ASC.Web.Data
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(adminUser, Constants.AdminRole);
+                }
+            }
+
+            var engineerEmail = "engineer@test.com";
+            var engineerPassword = "Engineer@123";
+
+            if (await _userManager.FindByEmailAsync(engineerEmail) == null)
+            {
+                var engineerUser = new IdentityUser
+                {
+                    UserName = engineerEmail,
+                    Email = engineerEmail,
+                    EmailConfirmed = true
+                };
+
+                var result = await _userManager.CreateAsync(engineerUser, engineerPassword);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(engineerUser, "Engineer");
                 }
             }
 
