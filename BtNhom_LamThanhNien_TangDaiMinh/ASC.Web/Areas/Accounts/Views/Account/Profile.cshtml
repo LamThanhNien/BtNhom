@@ -1,0 +1,34 @@
+﻿@model ProfileModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container section">
+    <h4>Profile</h4>
+
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="card-panel green lighten-4 green-text text-darken-4">@successMessage</div>
+    }
+
+    <form asp-action="Profile" method="post" class="col s12 m6">
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+        <div class="input-field">
+            <input asp-for="UserName" />
+            <label asp-for="UserName" class="active"></label>
+            <span asp-validation-for="UserName" class="helper-text red-text"></span>
+        </div>
+
+        <div class="input-field">
+            <input asp-for="Email" readonly />
+            <label asp-for="Email" class="active"></label>
+        </div>
+
+        <button type="submit" class="btn waves-effect waves-light">Update Profile</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

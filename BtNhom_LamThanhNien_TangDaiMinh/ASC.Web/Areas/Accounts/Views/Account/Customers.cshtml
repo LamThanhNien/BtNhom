@@ -1,0 +1,59 @@
+﻿@model CustomerViewModel
+@{
+    ViewData["Title"] = "Customers";
+}
+
+<div class="container section">
+    <h4>Customers</h4>
+
+    @if (TempData["SuccessMessage"] is string successMessage)
+    {
+        <div class="card-panel green lighten-4 green-text text-darken-4">@successMessage</div>
+    }
+    @if (TempData["ErrorMessage"] is string errorMessage)
+    {
+        <div class="card-panel red lighten-4 red-text text-darken-4">@errorMessage</div>
+    }
+
+    <table id="tblCustomers" class="striped">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>User Name</th>
+                <th>Status</th>
+                <th>Update</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+            <tr>
+                <td>@customer.Email</td>
+                <td>@customer.UserName</td>
+                <td>@(customer.IsActive ? "Active" : "Inactive")</td>
+                <td>
+                    <form asp-action="Customers" method="post" class="inline-form">
+                        <input asp-for="Registration.Id" type="hidden" value="@customer.Id" />
+                        <input asp-for="Registration.Email" type="hidden" value="@customer.Email" />
+                        <input asp-for="Registration.UserName" type="hidden" value="@customer.UserName" />
+                        <input asp-for="Registration.IsActive" type="hidden" value="@(!customer.IsActive)" />
+                        <button type="submit" class="btn-small @(customer.IsActive ? "orange" : "green")">
+                            @(customer.IsActive ? "Deactivate" : "Activate")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            if ($.fn.DataTable) {
+                $('#tblCustomers').DataTable();
+            }
+        });
+    </script>
+}

@@ -1,0 +1,34 @@
+﻿@page
+@model ASC.Web.Areas.Identity.Pages.Account.ExternalLoginModel
+@{
+    ViewData["Title"] = "Đăng nhập ngoài";
+    Layout = "_Layout";
+}
+
+<div class="container section">
+    <h4>@ViewData["Title"]</h4>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="card-panel red lighten-4 red-text text-darken-4">@Model.ErrorMessage</div>
+    }
+
+    <p>
+        Bạn đã xác thực thành công với <strong>@Model.ProviderDisplayName</strong>. Vui lòng xác nhận email để hoàn tất đăng nhập.
+    </p>
+
+    <form asp-page-handler="Confirmation" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+        <div class="input-field">
+            <input asp-for="Input.Email" />
+            <label asp-for="Input.Email"></label>
+            <span asp-validation-for="Input.Email" class="field-validation-error"></span>
+        </div>
+
+        <button type="submit" class="btn waves-effect waves-light">Xác nhận</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

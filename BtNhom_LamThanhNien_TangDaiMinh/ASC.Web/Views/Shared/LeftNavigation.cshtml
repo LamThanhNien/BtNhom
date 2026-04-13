@@ -1,0 +1,58 @@
+﻿@using System
+@using System.Linq
+@model IReadOnlyList<ASC.Web.Models.MenuItem>
+
+@foreach (var item in Model)
+{
+    if (item.IsNested && item.NestedItems.Any())
+    {
+        <li>
+            <ul class="collapsible collapsible-accordion left-nav-collapsible">
+                <li>
+                    <a class="collapsible-header waves-effect waves-teal" href="#!">
+                        <i class="material-icons">@item.MaterialIcon</i>
+                        <span>@item.DisplayName</span>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            @foreach (var nested in item.NestedItems.OrderBy(i => i.Sequence))
+                            {
+                                <li>
+                                    @if (nested.DisplayName.Equals("Reset Password", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <a href="#" id="ancrResetPassword"><i class="material-icons">@nested.MaterialIcon</i>@nested.DisplayName</a>
+                                    }
+                                    else if (nested.DisplayName.Equals("Logout", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        <a href="#" id="ancrLogout"><i class="material-icons">@nested.MaterialIcon</i>@nested.DisplayName</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@nested.Link"><i class="material-icons">@nested.MaterialIcon</i>@nested.DisplayName</a>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li>
+            @if (item.DisplayName.Equals("Reset Password", StringComparison.OrdinalIgnoreCase))
+            {
+                <a href="#" id="ancrResetPassword"><i class="material-icons">@item.MaterialIcon</i>@item.DisplayName</a>
+            }
+            else if (item.DisplayName.Equals("Logout", StringComparison.OrdinalIgnoreCase))
+            {
+                <a href="#" id="ancrLogout"><i class="material-icons">@item.MaterialIcon</i>@item.DisplayName</a>
+            }
+            else
+            {
+                <a href="@item.Link"><i class="material-icons">@item.MaterialIcon</i>@item.DisplayName</a>
+            }
+        </li>
+    }
+}

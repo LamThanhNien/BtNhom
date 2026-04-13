@@ -1,104 +1,163 @@
-﻿using ASC.Model;
+using ASC.Model;
+using ASC.Web.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
-namespace ASC.Web.Data
+namespace ASC.Web.Data;
+
+public class IdentitySeed : IIdentitySeed
 {
-    public class IdentitySeed : IIdentitySeed
+    private readonly UserManager<IdentityUser> _userManager;
+    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly ApplicationDbContext _context;
+    private readonly ApplicationSettings _applicationSettings;
+
+    public IdentitySeed(
+        UserManager<IdentityUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        ApplicationDbContext context,
+        IOptions<ApplicationSettings> options)
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly ApplicationDbContext _context;
-        private readonly IConfiguration _configuration;
+        _userManager = userManager;
+        _roleManager = roleManager;
+        _context = context;
+        _applicationSettings = options.Value;
+    }
 
-        public IdentitySeed(UserManager<IdentityUser> userManager,
-                            RoleManager<IdentityRole> roleManager,
-                            ApplicationDbContext context,
-                            IConfiguration configuration)
+    public async Task SeedAsync()
+    {
+        var roles = new[]
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _context = context;
-            _configuration = configuration;
+            Constants.AdminRole,
+            Constants.ServiceEngineerRole,
+            Constants.CustomerRole
+        };
+
+        foreach (var role in roles)
+        {
+            if (!await _roleManager.RoleExistsAsync(role))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(role));
+            }
         }
 
-        public async Task SeedAsync()
+        await EnsureUserAsync(_applicationSettings.AdminEmail, _applicationSettings.AdminPassword, Constants.AdminRole);
+        await EnsureUserAsync(_applicationSettings.EngineerEmail, _applicationSettings.EngineerPassword, Constants.ServiceEngineerRole);
+        await EnsureUserAsync(_applicationSettings.UserEmail, _applicationSettings.UserPassword, Constants.CustomerRole);
+
+        await SeedMasterDataAsync();
+    }
+
+    private async Task EnsureUserAsync(string email, string password, string role)
+    {
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
-            // Tạo roles
-            var roles = new[] { Constants.AdminRole, Constants.ServiceEngineerRole, Constants.CustomerRole };
-            foreach (var role in roles)
-            {
-                if (!await _roleManager.RoleExistsAsync(role))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
-
-            // Tạo admin user mặc định
-            var adminEmail = "admin@asc.com";
-            if (await _userManager.FindByEmailAsync(adminEmail) == null)
-            {
-                var adminUser = new IdentityUser
-                {
-                    UserName = adminEmail,
-                    Email = adminEmail,
-                    EmailConfirmed = true
-                };
-                var result = await _userManager.CreateAsync(adminUser, "Admin@123");
-                if (result.Succeeded)
-                {
-                    await _userManager.AddToRoleAsync(adminUser, Constants.AdminRole);
-                }
-            }
-
-            // Seed MasterData từ appsettings.json
-            await SeedMasterDataAsync("MasterData:ServiceStatus", "ServiceStatus");
-            await SeedMasterDataAsync("MasterData:PromotionTypes", "PromotionType");
+            return;
         }
 
-        private async Task SeedMasterDataAsync(string configKey, string masterKeyName)
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user is null)
         {
-            var section = _configuration.GetSection(configKey);
-            if (!section.Exists()) return;
-
-            // Tìm hoặc tạo MasterDataKey
-            var keyEntity = await _context.MasterDataKeys.FirstOrDefaultAsync(k => k.Key == masterKeyName);
-            if (keyEntity == null)
+            user = new IdentityUser
             {
-                keyEntity = new MasterDataKey
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Key = masterKeyName,
-                    Description = $"Master data for {masterKeyName}",
-                    CreatedBy = "System",
-                    CreatedDate = DateTime.UtcNow
-                };
-                await _context.MasterDataKeys.AddAsync(keyEntity);
-                await _context.SaveChangesAsync();
+                UserName = email,
+                Email = email,
+                EmailConfirmed = true
+            };
+
+            var result = await _userManager.CreateAsync(user, password);
+            if (!result.Succeeded)
+            {
+                return;
+            }
+        }
+        else
+        {
+            var shouldUpdateUser = false;
+            if (!user.EmailConfirmed)
+            {
+                user.EmailConfirmed = true;
+                shouldUpdateUser = true;
             }
 
-            // Lấy danh sách giá trị từ config
-            var values = section.GetChildren().Select(c => new MasterDataValue
+            if (user.LockoutEnd.HasValue)
+            {
+                user.LockoutEnd = null;
+                shouldUpdateUser = true;
+            }
+
+            if (!string.Equals(user.UserName, email, StringComparison.OrdinalIgnoreCase))
+            {
+                user.UserName = email;
+                shouldUpdateUser = true;
+            }
+
+            if (shouldUpdateUser)
+            {
+                await _userManager.UpdateAsync(user);
+            }
+
+            var isCurrentPassword = await _userManager.CheckPasswordAsync(user, password);
+            if (!isCurrentPassword)
+            {
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetPasswordResult = await _userManager.ResetPasswordAsync(user, token, password);
+                if (!resetPasswordResult.Succeeded)
+                {
+                    await _userManager.RemovePasswordAsync(user);
+                    await _userManager.AddPasswordAsync(user, password);
+                }
+            }
+        }
+
+        if (!await _userManager.IsInRoleAsync(user, role))
+        {
+            await _userManager.AddToRoleAsync(user, role);
+        }
+    }
+
+    private async Task SeedMasterDataAsync()
+    {
+        var serviceStatusKey = await _context.MasterDataKeys.FirstOrDefaultAsync(k => k.Key == "ServiceStatus");
+        if (serviceStatusKey is null)
+        {
+            serviceStatusKey = new MasterDataKey
             {
                 Id = Guid.NewGuid().ToString(),
-                Value = c["Value"],
-                Description = c["Description"] ?? c["Value"],
-                DisplayOrder = int.Parse(c["DisplayOrder"] ?? "0"),
-                IsActive = bool.Parse(c["IsActive"] ?? "true"),
-                MasterDataKeyId = keyEntity.Id,
+                Key = "ServiceStatus",
+                Description = "Master data for Service Status",
                 CreatedBy = "System",
                 CreatedDate = DateTime.UtcNow
-            }).ToList();
-
-            // Thêm nếu chưa tồn tại
-            foreach (var val in values)
-            {
-                if (!await _context.MasterDataValues.AnyAsync(v => v.Value == val.Value && v.MasterDataKeyId == keyEntity.Id))
-                {
-                    await _context.MasterDataValues.AddAsync(val);
-                }
-            }
+            };
+            _context.MasterDataKeys.Add(serviceStatusKey);
             await _context.SaveChangesAsync();
         }
+
+        var defaults = new[] { "New", "In Progress", "Completed" };
+        for (var i = 0; i < defaults.Length; i++)
+        {
+            var status = defaults[i];
+            var exists = await _context.MasterDataValues.AnyAsync(v =>
+                v.MasterDataKeyId == serviceStatusKey.Id &&
+                v.Value == status);
+
+            if (!exists)
+            {
+                _context.MasterDataValues.Add(new MasterDataValue
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Value = status,
+                    Description = status,
+                    DisplayOrder = i + 1,
+                    IsActive = true,
+                    MasterDataKeyId = serviceStatusKey.Id,
+                    CreatedBy = "System",
+                    CreatedDate = DateTime.UtcNow
+                });
+            }
+        }
+
+        await _context.SaveChangesAsync();
     }
 }

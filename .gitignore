@@ -19,3 +19,7 @@ project.lock.json
 # IIS Express
 .vscode/
 *.db
+
+# Graphify (skill outputs/cache)
+graphify-out/
+.graphify_*
