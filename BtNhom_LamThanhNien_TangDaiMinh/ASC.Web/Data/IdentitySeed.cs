@@ -128,7 +128,13 @@ public class IdentitySeed : IIdentitySeed
                 Key = "ServiceStatus",
                 Description = "Master data for Service Status",
                 CreatedBy = "System",
+<<<<<<< HEAD
                 CreatedDate = DateTime.UtcNow
+=======
+                CreatedDate = DateTime.UtcNow,
+                UpdatedBy = "System",
+                UpdatedDate = DateTime.UtcNow
+>>>>>>> dd2e859 (Nop bai Lab09 LamThanhNien TangDaiMinh)
             };
             _context.MasterDataKeys.Add(serviceStatusKey);
             await _context.SaveChangesAsync();
@@ -153,7 +159,13 @@ public class IdentitySeed : IIdentitySeed
                     IsActive = true,
                     MasterDataKeyId = serviceStatusKey.Id,
                     CreatedBy = "System",
+<<<<<<< HEAD
                     CreatedDate = DateTime.UtcNow
+=======
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedBy = "System",
+                    UpdatedDate = DateTime.UtcNow
+>>>>>>> dd2e859 (Nop bai Lab09 LamThanhNien TangDaiMinh)
                 });
             }
         }

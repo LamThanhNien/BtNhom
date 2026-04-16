@@ -27,6 +27,13 @@ public class HomeController : AnonymousController
     {
         return View();
     }
+<<<<<<< HEAD
+=======
+    public IActionResult Dashboard()
+    {
+        return View();
+    }
+>>>>>>> dd2e859 (Nop bai Lab09 LamThanhNien TangDaiMinh)
 
     public IActionResult Contact()
     {

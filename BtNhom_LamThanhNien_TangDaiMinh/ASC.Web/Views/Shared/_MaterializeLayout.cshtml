@@ -16,6 +16,7 @@
 </head>
 <body>
     <!-- Navbar -->
+<<<<<<< HEAD
     <nav class="black" role="navigation">
         <div class="nav-wrapper container">
             <a id="logo-container" href="#" class="brand-logo">Automobile Service Center</a>
@@ -31,11 +32,110 @@
         </div>
     </nav>
     <!-- End Navbar -->
+=======
+    <nav class="white" role="navigation">
+        <div class="nav-wrapper container">
+            <a id="logo-container" href="/" class="brand-logo teal-text">ASC</a>
+            <ul class="right hide-on-med-and-down">
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <li><a class="black-text" asp-area="ServiceRequests" asp-controller="Dashboard" asp-action="Dashboard">Dashboard</a></li>
+                    <li>
+                        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <a class="black-text" href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();">Logout</a>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li><a class="black-text" asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+                }
+                <li><a class="black-text" href="/Home/Contact">Contact</a></li>
+            </ul>
+
+            <ul id="nav-mobile" class="sidenav">
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <li><a asp-area="ServiceRequests" asp-controller="Dashboard" asp-action="Dashboard">Dashboard</a></li>
+                    <li>
+                        <form id="logoutFormMobile" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                            <a href="javascript:void(0);" onclick="document.getElementById('logoutFormMobile').submit();">Logout</a>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
+                }
+                <li><a href="/Home/Contact">Contact</a></li>
+            </ul>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons black-text">menu</i></a>
+        </div>
+    </nav>
+
+    @if (ViewData["Title"]?.ToString() == "Home")
+    {
+        <div id="index-banner" class="parallax-container">
+            <div class="section no-pad-bot">
+                <div class="container">
+                    <br><br>
+                    <h1 class="header center teal-text text-lighten-2" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.6);">Automobile Service Center</h1>
+                    <div class="row center">
+                        <h5 class="header col s12 light" style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Where Quality meets Safety</h5>
+                    </div>
+                    <div class="row center">
+                        <a href="/Identity/Account/Login" id="downloadbutton" class="btn-large waves-effect waves-light teal lighten-1">Get Started</a>
+                    </div>
+                    <br><br>
+                </div>
+            </div>
+            <div class="parallax"><img src="~/images/background1.jpg" alt="Unsplashed background img 1"></div>
+        </div>
+    }
+>>>>>>> dd2e859 (Nop bai Lab09 LamThanhNien TangDaiMinh)
 
     <main>
         @RenderBody()
     </main>
 
+<<<<<<< HEAD
+=======
+    <footer class="page-footer blue-grey lighten-1">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">About Us</h5>
+                    <p class="grey-text text-lighten-4">
+                        Automobile Service Center is certified Company to perform car services. Our Workshop
+                        operations started in the month of October, 2010. We primarily focus on providing better
+                        services to our customers.
+                    </p>
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Services</h5>
+                    <ul>
+                        <li><a class="white-text" href="#!">Repair</a></li>
+                        <li><a class="white-text" href="#!">Maintenance</a></li>
+                        <li><a class="white-text" href="#!">Inspection</a></li>
+                    </ul>
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Connect</h5>
+                    <ul>
+                        <li><a class="white-text" href="#!">Facebook</a></li>
+                        <li><a class="white-text" href="#!">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                Powered by <a class="brown-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+            </div>
+        </div>
+    </footer>
+
+>>>>>>> dd2e859 (Nop bai Lab09 LamThanhNien TangDaiMinh)
     <!-- Materialize JS -->
     <script src="~/js/materialize.js"></script>
     <script src="~/js/init.js"></script>
