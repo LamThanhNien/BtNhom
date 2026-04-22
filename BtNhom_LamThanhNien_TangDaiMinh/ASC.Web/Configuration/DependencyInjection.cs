@@ -1,3 +1,5 @@
+using ASC.Business;
+using ASC.Business.Interfaces;
 using ASC.DataAccess;
 using ASC.Web.Data;
 using ASC.Web.Models;
@@ -64,6 +66,8 @@ public static class DependencyInjection
         services.AddScoped<IIdentitySeed, IdentitySeed>();
         services.AddScoped<IEmailSender, AuthMessageSender>();
         services.AddScoped<INavigationCacheOperations, NavigationCacheOperations>();
+        services.AddScoped<IMasterDataOperations, MasterDataOperations>();
+        services.AddAutoMapper(typeof(ApplicationDbContext));
 
         return services;
     }

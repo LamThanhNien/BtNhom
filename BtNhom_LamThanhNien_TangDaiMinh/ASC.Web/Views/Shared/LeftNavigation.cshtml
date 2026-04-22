@@ -1,4 +1,4 @@
-﻿@using System
+@using System
 @using System.Linq
 @model IReadOnlyList<ASC.Web.Models.MenuItem>
 
@@ -7,11 +7,10 @@
     if (item.IsNested && item.NestedItems.Any())
     {
         <li>
-            <ul class="collapsible collapsible-accordion left-nav-collapsible">
+            <ul class="collapsible collapsible-accordion">
                 <li>
                     <a class="collapsible-header waves-effect waves-teal" href="#!">
-                        <i class="material-icons">@item.MaterialIcon</i>
-                        <span>@item.DisplayName</span>
+                        <i class="material-icons">@item.MaterialIcon</i>@item.DisplayName
                     </a>
                     <div class="collapsible-body">
                         <ul>

@@ -1,4 +1,4 @@
-﻿/* Custom Stylesheet */
+/* Custom Stylesheet */
 
 html,
 body {
@@ -62,15 +62,6 @@ footer.secureLayout {
   padding-left: 300px;
 }
 
-.left-nav-collapsible .material-icons {
-  vertical-align: middle;
-  margin-right: 6px;
-}
-
-.left-nav-collapsible a {
-  color: #333;
-}
-
 .input-field.input-validation-error input,
 input.input-validation-error {
   border-bottom: 1px solid #ff4081 !important;
@@ -126,4 +117,23 @@ input.valid {
   #index-banner .section {
     top: 0;
   }
+}
+
+/* Fix sidebar collapsible header alignment to match normal links */
+.sidenav .collapsible-header {
+  padding: 0 32px;
+}
+
+.sidenav .collapsible-header i.material-icons {
+  float: left;
+  height: 48px;
+  line-height: 48px;
+  margin: 0 32px 0 0;
+  width: 24px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+/* Indent submenus slightly for better hierarchy */
+.sidenav .collapsible-body li > a {
+  padding-left: 48px;
 }

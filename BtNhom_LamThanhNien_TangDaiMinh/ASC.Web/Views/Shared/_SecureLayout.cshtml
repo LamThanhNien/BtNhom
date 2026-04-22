@@ -1,4 +1,4 @@
-﻿@{
+@{
     Layout = "_MasterLayout";
 }
 @using System.Security.Claims
@@ -78,6 +78,19 @@
 @section Scripts {
     <script type="text/javascript">
         $(function () {
+            // Highlight the active nav item before initializing Materialize components
+            const currentPath = window.location.pathname.toLowerCase();
+            $('#nav-mobile a').each(function () {
+                const link = $(this).attr('href');
+                if (link && link !== '#' && link !== '#!' && currentPath.indexOf(link.toLowerCase()) !== -1) {
+                    $(this).parent('li').addClass('active');
+                    const collapsibleBody = $(this).closest('.collapsible-body');
+                    if (collapsibleBody.length > 0) {
+                        collapsibleBody.closest('li').addClass('active');
+                    }
+                }
+            });
+
             $('.sidenav').sidenav();
             $('.collapsible').collapsible();
 

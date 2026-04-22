@@ -1,0 +1,306 @@
+@model MasterValuesViewModel
+@{
+    Layout = "_SecureLayout";
+    ViewData["Title"] = "Master Values";
+    var masterKeys = ViewBag.MasterKeys as List<MasterDataKeyViewModel> ?? new List<MasterDataKeyViewModel>();
+}
+
+<div class="row"></div>
+<div class="row padding-top-20px padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="section white-text padding-left-10px blue-grey lighten-1">
+            <h5>Master Values</h5>
+        </div>
+        <div class="divider"></div>
+        <div class="col s4 padding-bottom-15px">
+            <select id="ddlMasterKeys" asp-items="@(new SelectList(masterKeys, "RowKey", "PartitionKey"))">
+                <option value="">--Select--</option>
+            </select>
+            <label>Partition Key</label>
+        </div>
+        <div class="col s4 offset-s4 padding-bottom-15px right-align">
+            <a class="modal-trigger waves-effect waves-light" href="#modal1">
+                <i class="material-icons medium">upload_file</i>
+            </a>
+        </div>
+
+        <div class="col s12 padding-bottom-15px">
+            <table class="highlight centered" id="tblMasterValues">
+                <thead>
+                    <tr>
+                        <th>Row Key</th>
+                        <th>Partition Key</th>
+                        <th>Name</th>
+                        <th>Is Active</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row"></div>
+<div class="row padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="col s12 padding-0px">
+            <div class="section white-text padding-left-10px blue-grey lighten-1">
+                <h5>Master Value Details</h5>
+            </div>
+            <div class="divider"></div>
+            <form asp-controller="MasterData" asp-action="MasterValues" method="post" class="col s12" id="formMasterValue">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <input type="hidden" asp-for="IsEdit" />
+                    <input type="hidden" asp-for="MasterValueInContext.RowKey" />
+                    <input type="hidden" asp-for="MasterValueInContext.PartitionKey" />
+                    <div class="input-field col s4">
+                        <input asp-for="MasterValueInContext.RowKey" id="Input_MasterValue_RowKey" disabled="disabled" />
+                        <label asp-for="MasterValueInContext.RowKey">Row Key</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select id="Select_MasterValueInContext_PartitionKey"
+                                asp-for="MasterValueInContext.PartitionKey"
+                                asp-items="@(new SelectList(masterKeys, "RowKey", "PartitionKey"))"
+                                required="required">
+                            <option value="">--Select--</option>
+                        </select>
+                        <label>Partition Key</label>
+                        <span asp-validation-for="MasterValueInContext.PartitionKey" class="red-text"></span>
+                    </div>
+                    <div class="input-field col s4">
+                        <input asp-for="MasterValueInContext.Name" class="validate" />
+                        <label asp-for="MasterValueInContext.Name"></label>
+                        <span asp-validation-for="MasterValueInContext.Name" class="red-text"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <div class="switch">
+                            <label>
+                                Is Active
+                                <input asp-for="MasterValueInContext.IsActive" />
+                                <span class="lever"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-field col s8 right-align">
+                        <button class="btn waves-effect waves-light btnSubmit"
+                                type="button"
+                                name="action">
+                            Create
+                            <i class="material-icons right">send</i>
+                        </button>
+                        <button class="btn waves-effect waves-light reset red lighten-1"
+                                type="button"
+                                name="action">
+                            Reset
+                        </button>
+                    </div>
+                    <div class="row col s12 right-align" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="modal1" class="modal modal-fixed-footer">
+    <div class="modal-content">
+        <h4>Upload Excel</h4>
+        <p>Upload an Excel file that contains all master values.</p>
+
+        <div class="row hide divErrors">
+            <div class="col s12">
+                <div class="card-panel red lighten-1">
+                    <span class="white-text errors"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress hide">
+            <div class="indeterminate"></div>
+        </div>
+
+        <form asp-action="UploadExcel" asp-controller="MasterData" method="post">
+            @Html.AntiForgeryToken()
+            <div class="file-field input-field">
+                <div class="btn">
+                    <span>File</span>
+                    <input type="file" id="files" />
+                </div>
+                <div class="file-path-wrapper">
+                    <input class="file-path validate" type="text" />
+                </div>
+                <div class="input-field row right">
+                    <button class="btn waves-effect waves-light btnUpload" type="button" name="action">
+                        Upload
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('select').formSelect();
+            $('.modal').modal();
+
+            const token = $('input[type=hidden][name=__RequestVerificationToken]', document).first().val();
+            $.ajaxSetup({
+                cache: false,
+                headers: { 'RequestVerificationToken': token }
+            });
+
+            const table = $('#tblMasterValues').DataTable({
+                ajax: {
+                    url: '@Url.Action("MasterValuesByKey", "MasterData")',
+                    type: 'GET'
+                },
+                pageLength: 3,
+                lengthMenu: [[3, 5, 10, -1], [3, 5, 10, 'All']],
+                columns: [
+                    { data: 'rowKey' },
+                    { data: 'partitionKey' },
+                    { data: 'name' },
+                    { data: 'isActive' },
+                    { data: null }
+                ],
+                columnDefs: [
+                    {
+                        targets: [3],
+                        render: function (data) {
+                            return data === true
+                                ? '<i class="material-icons green-text">check</i>'
+                                : '<i class="material-icons red-text">clear</i>';
+                        }
+                    },
+                    {
+                        targets: [4],
+                        render: function () {
+                            return '<i class="small material-icons edit cursor-hand">mode_edit</i>';
+                        }
+                    }
+                ]
+            });
+
+            const resetMasterValueForm = function () {
+                $('#formMasterValue')[0].reset();
+                $('#IsEdit').val('false');
+                $('#MasterValueInContext_RowKey').val('');
+                $('#MasterValueInContext_PartitionKey').val('');
+                $('#Input_MasterValue_RowKey').val('');
+                $('#Select_MasterValueInContext_PartitionKey').removeAttr('disabled');
+                $('#Select_MasterValueInContext_PartitionKey').formSelect();
+                $('.btnSubmit').text('Create');
+                $('.validation-summary-valid').find('ul').html('');
+                $('.select-wrapper').removeClass('valid');
+                M.updateTextFields();
+            };
+
+            $(document).on('click', '.reset', function () {
+                resetMasterValueForm();
+            });
+
+            $(document).on('click', '.edit', function () {
+                const row = $('#tblMasterValues').DataTable().row($(this).parents('tr')).data();
+
+                $('#IsEdit').val('true');
+                $('#MasterValueInContext_RowKey').val(row.rowKey);
+                $('#Input_MasterValue_RowKey').val(row.rowKey);
+                $('#MasterValueInContext_PartitionKey').val(row.partitionKey);
+                $('#Select_MasterValueInContext_PartitionKey').formSelect('destroy');
+                $('#Select_MasterValueInContext_PartitionKey option').prop('selected', false);
+                $('#Select_MasterValueInContext_PartitionKey option').filter(function () {
+                    return $(this).text() === row.partitionKey;
+                }).prop('selected', true);
+                $('#Select_MasterValueInContext_PartitionKey').attr('disabled', 'disabled');
+                $('#Select_MasterValueInContext_PartitionKey').formSelect();
+                $('.select-wrapper').removeClass('valid');
+
+                $('#MasterValueInContext_Name').val(row.name).addClass('valid');
+                $('#MasterValueInContext_IsActive').prop('checked', row.isActive === true);
+                $('.btnSubmit').text('Save');
+                M.updateTextFields();
+            });
+
+            $(document).on('change', '#ddlMasterKeys', function () {
+                const selectedKey = $('#ddlMasterKeys option:selected').text();
+                table.ajax.url('@Url.Action("MasterValuesByKey", "MasterData")' + '?key=' + encodeURIComponent(selectedKey));
+                table.ajax.reload();
+            });
+
+            $(document).on('click', '.btnSubmit', function () {
+                const form = $('#formMasterValue');
+                if (!form.valid()) {
+                    return;
+                }
+
+                const masterData = {
+                    rowKey: $('#MasterValueInContext_RowKey').val(),
+                    partitionKey: $('#Select_MasterValueInContext_PartitionKey option:selected').text(),
+                    name: $('#MasterValueInContext_Name').val(),
+                    isActive: $('#MasterValueInContext_IsActive').is(':checked')
+                };
+
+                $.post('@Url.Action("MasterValues", "MasterData")',
+                    { 
+                        masterValue: masterData, 
+                        isEdit: $('#IsEdit').val(),
+                        __RequestVerificationToken: token
+                    },
+                    function (response) {
+                        if (response.error) {
+                            $('.validation-summary-valid, .validation-summary-errors').removeClass('validation-summary-valid').addClass('validation-summary-errors');
+                            $('.validation-summary-errors').find('ul').html('<li>' + response.text + '</li>');
+                        } else {
+                            const selectedKey = $('#ddlMasterKeys option:selected').text();
+                            table.ajax.url('@Url.Action("MasterValuesByKey", "MasterData")' + '?key=' + encodeURIComponent(selectedKey));
+                            table.ajax.reload();
+                            resetMasterValueForm();
+                        }
+                    }
+                );
+            });
+
+            $(document).on('click', '.btnUpload', function () {
+                const fileUpload = $('#files').get(0);
+                const files = fileUpload.files;
+                const data = new FormData();
+
+                $.each(files, function (i, file) {
+                    data.append(file.name, file);
+                });
+
+                const token = $('input[type=hidden][name=__RequestVerificationToken]').val();
+                data.append('__RequestVerificationToken', token);
+
+                $('.progress').removeClass('hide');
+                $('.divErrors').addClass('hide');
+                $.ajax({
+                    type: 'POST',
+                    url: '/Configuration/MasterData/UploadExcel',
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (message) {
+                        $('.progress').addClass('hide');
+                        if (message.success) {
+                            window.location.reload();
+                        }
+                        if (message.error) {
+                            $('.divErrors').removeClass('hide');
+                            $('.errors').html(message.text);
+                        }
+                    },
+                    error: function () {
+                        $('.progress').addClass('hide');
+                    }
+                });
+            });
+        });
+    </script>
+}

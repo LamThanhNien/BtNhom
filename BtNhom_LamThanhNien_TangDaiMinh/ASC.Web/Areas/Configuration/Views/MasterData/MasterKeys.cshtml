@@ -1,0 +1,153 @@
+@model MasterKeysViewModel
+@{
+    Layout = "_SecureLayout";
+    ViewData["Title"] = "Master Keys";
+}
+
+<div class="row"></div>
+<div class="row padding-top-20px padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="section white-text padding-left-10px blue-grey lighten-1">
+            <h5>Master Keys</h5>
+        </div>
+        <div class="divider"></div>
+        <div class="col s12 padding-bottom-15px">
+            @if (Model.MasterKeys.Any())
+            {
+                <table class="highlight centered" id="tblMasterKeys">
+                    <thead>
+                        <tr>
+                            <th>Row Key</th>
+                            <th>Name</th>
+                            <th>Is Active</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.MasterKeys)
+                        {
+                            <tr>
+                                <td>@item.RowKey</td>
+                                <td>@item.Name</td>
+                                <td>
+                                    <i class="material-icons @(item.IsActive ? "green-text" : "red-text")">@(item.IsActive ? "check" : "clear")</i>
+                                </td>
+                                <td>
+                                    <a class="small material-icons edit cursor-hand"
+                                       data-rowkey="@item.RowKey"
+                                       data-partitionkey="@item.PartitionKey"
+                                       data-name="@item.Name"
+                                       data-isactive="@item.IsActive">mode_edit</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="card blue-grey lighten-1">
+                    <div class="card-content white-text">
+                        <span class="card-title">No Data</span>
+                        <p>No Master Keys found. Please add a Master Key.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row"></div>
+<div class="row padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="col s12 padding-0px">
+            <div class="section white-text padding-left-10px blue-grey lighten-1">
+                <h5>Master Key Details</h5>
+            </div>
+            <div class="divider"></div>
+            <form asp-controller="MasterData" asp-action="MasterKeys" method="post" class="col s12" id="formMasterKey">
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <input type="hidden" asp-for="IsEdit" />
+                    <input type="hidden" asp-for="MasterKeyInContext.RowKey" />
+                    <input type="hidden" asp-for="MasterKeyInContext.PartitionKey" />
+                    <div class="input-field col s4">
+                        <input id="Input_MasterKey_RowKey" asp-for="MasterKeyInContext.RowKey" disabled="disabled" />
+                        <label asp-for="MasterKeyInContext.RowKey">Row Key</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input asp-for="MasterKeyInContext.Name" class="validate" />
+                        <label asp-for="MasterKeyInContext.Name"></label>
+                        <span asp-validation-for="MasterKeyInContext.Name" class="red-text"></span>
+                    </div>
+                    <div class="input-field col s4">
+                        <div class="switch">
+                            <label>
+                                Is Active
+                                <input asp-for="MasterKeyInContext.IsActive" />
+                                <span class="lever"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s8 right-align">
+                        <button class="btn waves-effect waves-light btnSubmit"
+                                type="submit"
+                                name="action">
+                            Create
+                            <i class="material-icons right">send</i>
+                        </button>
+                        <button class="btn waves-effect waves-light reset red lighten-1"
+                                type="button"
+                                name="action">
+                            Reset
+                        </button>
+                    </div>
+                    <div class="row col s12 right-align" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            if ($.fn.DataTable) {
+                $('#tblMasterKeys').DataTable({
+                    pageLength: 3,
+                    lengthMenu: [[3, 5, 10, -1], [3, 5, 10, 'All']]
+                });
+            }
+
+            $(document).on('click', '.reset', function () {
+                $('#formMasterKey')[0].reset();
+                $('#IsEdit').val('false');
+                $('#MasterKeyInContext_RowKey').val('');
+                $('#MasterKeyInContext_PartitionKey').val('');
+                $('#Input_MasterKey_RowKey').val('');
+                $('.btnSubmit').text('Create');
+                $('.validation-summary-valid').find('ul').html('');
+                M.updateTextFields();
+            });
+
+            $(document).on('click', '.edit', function () {
+                const rowKey = $(this).data('rowkey');
+                const partitionKey = $(this).data('partitionkey');
+                const name = $(this).data('name');
+                const isActive = ($(this).data('isactive') === true || $(this).data('isactive') === 'True');
+
+                $('#IsEdit').val('true');
+                $('#MasterKeyInContext_RowKey').val(rowKey);
+                $('#Input_MasterKey_RowKey').val(rowKey);
+                $('#MasterKeyInContext_PartitionKey').val(partitionKey);
+                $('#MasterKeyInContext_Name').val(name).addClass('valid');
+                $('#MasterKeyInContext_IsActive').prop('checked', isActive);
+                $('.btnSubmit').text('Save');
+                M.updateTextFields();
+            });
+        });
+    </script>
+}
