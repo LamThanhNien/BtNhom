@@ -1,9 +1,34 @@
+@model ASC.Web.Areas.ServiceRequests.Models.DashboardViewModel
 @{
-    ViewData["Title"] = "Dashboard";
     Layout = "_SecureLayout";
+    ViewData["Title"] = "Service Requests";
+
+    var partialViewData = new ViewDataDictionary(ViewData)
+    {
+        ["SectionName"] = "Service Requests",
+        ["Id"] = "tblServiceRequests",
+        ["IsAudit"] = false
+    };
 }
 
-<div class="container section">
-    <h4 class="header">Dashboard</h4>
-    <p>Welcome to Automobile Service Center secure dashboard.</p>
-</div>
+<div class="row"></div>
+@await Html.PartialAsync("_ServiceRequestGrid", Model.ServiceRequests, partialViewData)
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const table = $('#tblServiceRequests').DataTable({
+                pageLength: 3,
+                lengthMenu: [[3, 5, 10, -1], [3, 5, 10, 'All']],
+                ordering: [],
+                columnDefs: [
+                    { targets: [0, 1], visible: false },
+                    { targets: 3, width: '20%' }
+                ]
+            });
+
+            $('#tblServiceRequests').css('width', '100%');
+            $("select[name='tblServiceRequests_length']").formSelect();
+        });
+    </script>
+}

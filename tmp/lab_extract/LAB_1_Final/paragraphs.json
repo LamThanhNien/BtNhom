@@ -1,0 +1,962 @@
+[
+  {
+    "index": 1,
+    "style": "Normal",
+    "text": "LAB 1. Designing a Modern Real-World Web Application"
+  },
+  {
+    "index": 2,
+    "style": "List Paragraph",
+    "text": "Tổng quan về Chiến lược và Quy trình Phát triển Ứng dụng"
+  },
+  {
+    "index": 3,
+    "style": "Normal",
+    "text": "Các phương pháp luận phổ biến bao gồm:"
+  },
+  {
+    "index": 4,
+    "style": "List Paragraph",
+    "text": "Waterfall model"
+  },
+  {
+    "index": 5,
+    "style": "List Paragraph",
+    "text": "Rapid application development"
+  },
+  {
+    "index": 6,
+    "style": "List Paragraph",
+    "text": "Agile software development"
+  },
+  {
+    "index": 7,
+    "style": "List Paragraph",
+    "text": "prototype model"
+  },
+  {
+    "index": 8,
+    "style": "Normal",
+    "text": "Trên thực tế, một số tổ chức sử dụng các phương pháp và quy trình phát triển kết hợp được thiết kế riêng của họ. Bất kể chúng ta áp dụng phương pháp phần mềm nào, chúng ta phải tuân thủ một số giai đoạn chung:"
+  },
+  {
+    "index": 10,
+    "style": "List Paragraph",
+    "text": "Requirements Gathering and Analysis"
+  },
+  {
+    "index": 11,
+    "style": "List Paragraph",
+    "text": "Xác định tất cả các yêu cầu chức năng của phần mềm và tạo một tài liệu đặc tả chức năng ngắn gọn và sau đó chia sẻ nó với tất cả các bên liên quan."
+  },
+  {
+    "index": 12,
+    "style": "List Paragraph",
+    "text": "Planning"
+  },
+  {
+    "index": 13,
+    "style": "List Paragraph",
+    "text": "Góm nhóm các chức năng, đế xuất kết hoạch thực hiện dự án với các mốc thời gian và phân phối hợp lý"
+  },
+  {
+    "index": 14,
+    "style": "List Paragraph",
+    "text": "System Design"
+  },
+  {
+    "index": 15,
+    "style": "List Paragraph",
+    "text": "Thiết kế toàn bộ kiến trúc của hệ thống. Và liệt kê tất cả các công nghệ (technologies), công cụ (tools) và sản phẩm thương mại sẵn có sẽ được sử dụng trong quá trình phát triển ứng dụng. Kế quả là các thông số kỹ thuật cho logical and physical architecture."
+  },
+  {
+    "index": 16,
+    "style": "List Paragraph",
+    "text": "Development"
+  },
+  {
+    "index": 17,
+    "style": "List Paragraph",
+    "text": "Giai đoạn code và phát triển ứng dụng . Giai đoạn này có thể tuân theo các chiến lược như phát triển theo test-driven development (TDD) hoặc domain-driven (DDD)."
+  },
+  {
+    "index": 18,
+    "style": "List Paragraph",
+    "text": "Trong TDD, tạo các unit tests trước khi phát triển mã ứng dụng. Lúc đầu, tất cả các unit tests sẽ fails, và sau đó phải cấu trúc lại mã ứng dụng để vượt qua các unit tests. Đây là một quá trình lặp đi lặp lại xảy ra mỗi khi một chức năng mới được thêm vào hoặc một chức năng hiện có được sửa đổi."
+  },
+  {
+    "index": 19,
+    "style": "Normal",
+    "text": "Testing"
+  },
+  {
+    "index": 20,
+    "style": "Normal",
+    "text": "Thực hiện test ứng dụng. Quá trình bao gồm system integration testing (SIT), sau đó user acceptance testing  (UAT). Thử nghiệm phải là một hoạt động lặp đi lặp lại và liên tục để làm cho ứng dụng ổn định hơn."
+  },
+  {
+    "index": 21,
+    "style": "Normal",
+    "text": "Deployment"
+  },
+  {
+    "index": 22,
+    "style": "Normal",
+    "text": "Hoạt động triển khai tất cả các thủ tục cần thiết để lưu trữ ứng dụng trên môi trường. Hệ thống kiểm soát phiên bản hiện tại hỗ trợ triển khai tự động đến các môi trường đã cấu hình."
+  },
+  {
+    "index": 23,
+    "style": "Normal",
+    "text": "Maintenance and Operations"
+  },
+  {
+    "index": 24,
+    "style": "Normal",
+    "text": "Bảo trì là giai đoạn chúng tôi giám sát chặt chẽ ứng dụng được lưu trữ để tìm các vấn đề và sau đó phát hành các bản vá lỗi để khắc phục. Các tác vụ vận hành như nâng cấp phần mềm trên máy chủ và sao lưu cơ sở dữ liệu được thực hiện như một phần của hoạt động bảo trì."
+  },
+  {
+    "index": 25,
+    "style": "List Paragraph",
+    "text": "Giới thiệu về “Ứng dụng Trung tâm dịch vụ ô tô”"
+  },
+  {
+    "index": 26,
+    "style": "List Paragraph",
+    "text": "Trung tâm Dịch vụ Ô tô là một công cung cấp tất cả các loại dịch vụ bảo dưỡng ô tô cho khách hàng của mình. Công ty này có hơn 20 chi nhánh và phục vụ hơn 3.000 khách hàng mỗi ngày. Nó cung cấp trải nghiệm cho khách hàng trong tất cả các lĩnh vực liên quan đến sửa chữa và bảo dưỡng ô tô. Trung tâm Dịch vụ Ô tô cung cấp các dịch vụ bảo dưỡng ô tô trong các lĩnh vực sau: Động cơ và Lốp xe, Điều hòa không khí, Hộp số Tự động và Thủ công, Hệ thống Điện, Ắc quy, Phanh và Thay nhớt. Trung tâm Dịch vụ này cũng sẽ giải quyết các yêu cầu và khiếu nại cụ thể của khách hàng về xe ô tô. Đôi khi nó cung cấp các dịch vụ bổ sung bao gồm kéo, đón và thả, bảo hiểm và các dịch vụ liên quan đến tài chính. Trung tâm Dịch vụ này sử dụng hơn 1.500 chuyên gia với nhiều năng lực khác nhau. Hầu hết nhân viên là kỹ sư dịch vụ chịu trách nhiệm về các hoạt động dịch vụ hàng ngày, trong khi các nhân viên khác đảm nhận các trách nhiệm như đặt hàng phụ tùng, quản lý hậu cần và điều hành các hoạt động tài chính. Ngày nay, Trung tâm Dịch vụ Ô tô đang đối mặt với một thách thức kinh doanh lớn: duy trì giao tiếp tốt với khách hàng. Công ty thiếu một phương pháp giao tiếp thời gian thực với khách hàng có giá cả phải chăng và đáng tin cậy (ví dụ: trò chuyện trực tiếp giữa khách hàng và kỹ sư dịch vụ hoặc e-mail."
+  },
+  {
+    "index": 27,
+    "style": "List Paragraph",
+    "text": "Phần lớn khách hàng muốn cập nhật dịch vụ theo thời gian thực và đặt lịch hẹn dịch vụ tự động. Hiện tại, công ty yêu cầu khách hàng đến chi nhánh Trung tâm dịch vụ và thảo luận về các dịch vụ với một kỹ sư dịch vụ có sẵn, người này sẽ mở thẻ công việc dịch vụ ghi lại các chi tiết. Trong quá trình dịch vụ, tất cả các cuộc giao tiếp giữa kỹ sư dịch vụ và khách hàng đều diễn ra thông qua các cuộc gọi điện thoại và các điểm đã thảo luận sẽ được đính kèm lại vào thẻ công việc. Sau khi dịch vụ hoàn tất, khách hàng thanh toán số tiền trên hóa đơn và kỹ sư dịch vụ sẽ đóng thẻ công việc. Trung tâm dịch vụ ô tô đã xác định rằng toàn bộ quy trình này không hiệu quả và đang làm giảm giá trị thương hiệu của mình vì những lý do sau:"
+  },
+  {
+    "index": 28,
+    "style": "List Paragraph",
+    "text": "Gây ra sự chậm trễ trong dịch vụ vì phụ thuộc nhiều vào yếu tố con người"
+  },
+  {
+    "index": 29,
+    "style": "List Paragraph",
+    "text": "Thiếu minh bạch"
+  },
+  {
+    "index": 30,
+    "style": "List Paragraph",
+    "text": "Tạo cơ hội cho việc giao tiếp sai lệch"
+  },
+  {
+    "index": 31,
+    "style": "List Paragraph",
+    "text": "Không cung cấp độ chính xác"
+  },
+  {
+    "index": 32,
+    "style": "List Paragraph",
+    "text": "Không cho phép công ty tiếp cận khách hàng và quảng bá các ưu đãi, giảm giá và gói dịch vụ."
+  },
+  {
+    "index": 34,
+    "style": "List Paragraph",
+    "text": "Xác định các chức năng của ứng dụng"
+  },
+  {
+    "index": 35,
+    "style": "List Paragraph",
+    "text": "Technologies Used in Building the Application"
+  },
+  {
+    "index": 38,
+    "style": "List Paragraph",
+    "text": "Logical Architecture of the Application"
+  },
+  {
+    "index": 39,
+    "style": "List Paragraph",
+    "text": "Kiến trúc logic là một bản thiết kế mô tả tất cả các thành phần của hệ thống và tương tác của chúng."
+  },
+  {
+    "index": 42,
+    "style": "List Paragraph",
+    "text": "Continuous Integration and Deployment Architecture"
+  },
+  {
+    "index": 43,
+    "style": "List Paragraph",
+    "text": "Trong thế giới phát triển phần mềm ngày nay, tốc độ và tính linh hoạt là yếu tố quyết định đối với thành công của một dự án. Để đáp ứng nhanh chóng với yêu cầu thị trường đang thay đổi liên tục, các nhóm phát triển phần mềm cần tìm kiếm các phương pháp và công nghệ hiện đại để tối ưu hóa quy trình phát triển."
+  },
+  {
+    "index": 45,
+    "style": "List Paragraph",
+    "text": "Kiến trúc phát triển và tích hợp liên tục(CI/CD)  là các phương pháp DevOps. Phương pháp này sẽ ngăn chặn nỗ lực thủ công và các tác vụ lặp đi lặp lại trên mọi bản dựng, do đó giảm khả năng xảy ra lỗi của con người, cải thiện chất lượng bản dựng và tăng hiệu quả của toàn bộ vòng đời phát triển, thử nghiệm và triển khai."
+  },
+  {
+    "index": 46,
+    "style": "List Paragraph",
+    "text": "Quy trình bắt đầu với developer, người thiết kế và phát triển ứng dụng trên máy cục bộ bằng cách kết nối với trình giả lập Azure Storage trên máy cục bộ. Khi hoàn thành thành công một tính năng, nhà phát triển sẽ commit code vào branch Dev của kho lưu trữ mã nguồn GitHub. Khi cam kết thành công, dịch vụ Travis CI sẽ kích hoạt bản build để xác thực toàn bộ mã nguồn xem có lỗi không và chạy các trường hợp thử nghiệm xUnit. Nếu bản dựng không thành công, developer và tất cả các bên liên quan khác sẽ được thông báo qua e-mail và developer có trách nhiệm sửa lỗi và commit code trở lại branch Dev. Đây là một quá trình lặp đi lặp lại đối với tất cả các developer trong giai đoạn phát triển."
+  },
+  {
+    "index": 49,
+    "style": "List Paragraph",
+    "text": "Khi quyết định triển khai các tính năng đã hoàn thành lên production servers cho người dùng, nhánh Dev sẽ được hợp nhất với nhánh master. Dịch vụ Travis CI sẽ build lại trên nhánh master và xác thực bản dựng. Quá trình lặp lại tương tự cũng tiếp tục trên nhánh master."
+  },
+  {
+    "index": 50,
+    "style": "List Paragraph",
+    "text": "Triển khai đến production servers được kích hoạt từ master branch. Sử dụng công nghệ Docker để tạo các container và triển khai chúng đến Azure Linux Virtual Machines. Bất cứ khi nào merge hoặc commit xảy ra tại master branch trên GitHub, Docker Cloud sẽ lấy mã nguồn mới nhất, và build  một Docker image, tạo một container Docker và cuối cùng đẩy container đến các Azure Virtual Machine được liên kết."
+  },
+  {
+    "index": 51,
+    "style": "List Paragraph",
+    "text": "Phân biệt CI/CD & Agile & DevOps: link"
+  },
+  {
+    "index": 52,
+    "style": "List Paragraph",
+    "text": "Software Prerequisites"
+  },
+  {
+    "index": 53,
+    "style": "List Paragraph",
+    "text": "Download và cài đặt Visual Studio 2022:"
+  },
+  {
+    "index": 54,
+    "style": "List Paragraph",
+    "text": "ASP.NET Web Development, Azure Development, và .NET Core Cross-Platform Development (.Net 8)"
+  },
+  {
+    "index": 55,
+    "style": "List Paragraph",
+    "text": "Tạo các tài khoản"
+  },
+  {
+    "index": 56,
+    "style": "List Paragraph",
+    "text": "GitHub (https://github.com/)"
+  },
+  {
+    "index": 57,
+    "style": "List Paragraph",
+    "text": "Travis CI (https://travis-ci.org/):Associate Travis CI with GitHub by signing in with GitHub credentials."
+  },
+  {
+    "index": 58,
+    "style": "List Paragraph",
+    "text": "Docker (www.docker.com)"
+  },
+  {
+    "index": 59,
+    "style": "List Paragraph",
+    "text": "Microsoft Azure Subscription (https://azure.microsoft.com/): Create a free Azure Account."
+  },
+  {
+    "index": 60,
+    "style": "List Paragraph",
+    "text": "Tạo ứng dụng Automobile Service Center Application"
+  },
+  {
+    "index": 61,
+    "style": "Normal",
+    "text": "Create a new project:"
+  },
+  {
+    "index": 70,
+    "style": "List Paragraph",
+    "text": "Thiết lập cấu hình ứng dụng"
+  },
+  {
+    "index": 71,
+    "style": "Normal",
+    "text": "Bổ sung cấu hình tiêu đề cho ứng dụng trong file appsettings.json"
+  },
+  {
+    "index": 73,
+    "style": "Normal",
+    "text": "Tạo class ApplicationSettings.cs để lấy cấu hình ứng dụng theo đường dẫn sau nằm trong project."
+  },
+  {
+    "index": 76,
+    "style": "Normal",
+    "text": "Tạo một đối tượng thuộc lớp ApplicationSettings lưu trữ thông tin cấu hình thực tế từ, và được tiêm phụ thuộc (Dependency Injection) vào view hoặc controler sử dụng IOption. Cập nhật file Program.cs"
+  },
+  {
+    "index": 78,
+    "style": "Normal",
+    "text": "Chỉnh sửa _Layout.cshtml để hiển thị tên ứng dụng trong phần navigation."
+  },
+  {
+    "index": 79,
+    "style": "Normal",
+    "text": "Inject IOptions into a View, Updated Nav Bar"
+  },
+  {
+    "index": 81,
+    "style": "Normal",
+    "text": "Để sử dụng setting trong controllers, thực hiện inject  IOptions<ApplicationSettings> vào controller."
+  },
+  {
+    "index": 82,
+    "style": "Normal",
+    "text": "Dependency Injection in Controllers"
+  },
+  {
+    "index": 85,
+    "style": "Normal",
+    "text": "Tạo các tệp cấu hình khác nhau cho các môi trường khác nhau. Tạo tệp JSON appsettings"
+  },
+  {
+    "index": 88,
+    "style": "Normal",
+    "text": "Thiết lập biến môi trường, right-click dự án  và chọn Properties. Vào tab  Debug tab, click  . Và thiết lập environment variables với “ASPNETCORE_ENVIRONMENT=Production”."
+  },
+  {
+    "index": 89,
+    "style": "List Paragraph",
+    "text": "Using Dependency Injection in the ASP.NET Core Application"
+  },
+  {
+    "index": 90,
+    "style": "Normal",
+    "text": "Dependency injection (DI) is a software pattern through which a software application can achieve loosely  coupled layers. Instead of directly creating objects at different layers of the application, dependency  injection will inject the dependent objects in different ways (for example, constructor injection or method  injection). This pattern uses abstractions (usually interfaces) and containers (it’s essentially a factory that is  responsible for providing instances of types) to resolve dependencies at runtime."
+  },
+  {
+    "index": 91,
+    "style": "Normal",
+    "text": "ASP.NET Core provides extensions to configure services such as Identity, Entity Framework, Authentication, and Caching. We can configure our custom business services by using any of the following extensions:"
+  },
+  {
+    "index": 92,
+    "style": "Normal",
+    "text": "• Transient: A new instance of the object will be created every time a call is made for that type."
+  },
+  {
+    "index": 93,
+    "style": "Normal",
+    "text": "• Scoped: Only one instance of the object will be created, and it will be served for every call made for the type in the same request."
+  },
+  {
+    "index": 94,
+    "style": "Normal",
+    "text": "• Singleton: Only one instance of the object will be created, and it will be served for every call made for the type for all requests."
+  },
+  {
+    "index": 95,
+    "style": "Normal",
+    "text": "Tạo các class dịch vụ sau:"
+  },
+  {
+    "index": 100,
+    "style": "Normal",
+    "text": "Dependency Injection Container Configuration in Program.cs"
+  },
+  {
+    "index": 102,
+    "style": "Normal",
+    "text": "Configured services can be accessed throughout the application in many ways"
+  },
+  {
+    "index": 107,
+    "style": "Normal",
+    "text": "Bước 3. Sử dụng Materialize CSS thiết kế giao diện cho ứng dụng"
+  },
+  {
+    "index": 108,
+    "style": "Normal",
+    "text": "Thiết kế dao diện có dạng sau"
+  },
+  {
+    "index": 111,
+    "style": "Normal",
+    "text": "Download tempate Parallax theme từ link https://materializecss.com/getting-started.html  và giải nén"
+  },
+  {
+    "index": 113,
+    "style": "Normal",
+    "text": "Thực hiện copy những file trong template vào project ASC:"
+  },
+  {
+    "index": 114,
+    "style": "List Paragraph",
+    "text": "Tất cả các file CSS vào thư mục wwwroot/css"
+  },
+  {
+    "index": 115,
+    "style": "List Paragraph",
+    "text": "Fonts vào thư mục wwwroot/fonts"
+  },
+  {
+    "index": 116,
+    "style": "List Paragraph",
+    "text": "Tất cả các file JS vào thư mục wwwroot/js"
+  },
+  {
+    "index": 117,
+    "style": "List Paragraph",
+    "text": "Tất cả các file ảnh (logo và background) vào thư mục  wwwroot/images"
+  },
+  {
+    "index": 118,
+    "style": "Normal",
+    "text": "Có thể download logo và background tại"
+  },
+  {
+    "index": 119,
+    "style": "Normal",
+    "text": "https://www.pexels.com/search/car/"
+  },
+  {
+    "index": 120,
+    "style": "Normal",
+    "text": "https://www.iconfinder.com/icons/285807/auto_vehicle_car_automobile_convertible_icon#size=128"
+  },
+  {
+    "index": 121,
+    "style": "Normal",
+    "text": "Ta có cấu trúc mới của wwwroot"
+  },
+  {
+    "index": 124,
+    "style": "Normal",
+    "text": "Tạo _MasterLayout.cshtml trong thư mục View/Shared  để khai báo charset, font, css và javascript"
+  },
+  {
+    "index": 125,
+    "style": "Normal",
+    "text": "Dùng chung cho tất cả các view."
+  },
+  {
+    "index": 128,
+    "style": "Normal",
+    "text": "Chỉnh sửa _Layout.cshtml"
+  },
+  {
+    "index": 134,
+    "style": "Normal",
+    "text": "Thiết kế Index.cshtml của Home"
+  },
+  {
+    "index": 135,
+    "style": "Normal",
+    "text": "@{"
+  },
+  {
+    "index": 136,
+    "style": "Normal",
+    "text": "ViewData[\"Title\"] = \"Home Page\";"
+  },
+  {
+    "index": 137,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 138,
+    "style": "Normal",
+    "text": "<div class=\"container\">"
+  },
+  {
+    "index": 139,
+    "style": "Normal",
+    "text": "<div class=\"section\">"
+  },
+  {
+    "index": 140,
+    "style": "Normal",
+    "text": "<!-- Icon Section -->"
+  },
+  {
+    "index": 141,
+    "style": "Normal",
+    "text": "<div class=\"row\">"
+  },
+  {
+    "index": 142,
+    "style": "Normal",
+    "text": "<div class=\"col s12 m4\">"
+  },
+  {
+    "index": 143,
+    "style": "Normal",
+    "text": "<div class=\"icon-block\">"
+  },
+  {
+    "index": 144,
+    "style": "Normal",
+    "text": "<h2 class=\"center brown-text\"><i class=\"material-icons\">group</i></h2>"
+  },
+  {
+    "index": 145,
+    "style": "Normal",
+    "text": "<h5 class=\"center\">Who we are</h5>"
+  },
+  {
+    "index": 146,
+    "style": "Normal",
+    "text": "<p class=\"light\">"
+  },
+  {
+    "index": 147,
+    "style": "Normal",
+    "text": "We believe in providing seamless and high-quality services"
+  },
+  {
+    "index": 148,
+    "style": "Normal",
+    "text": "to our customers. Our customer-first approach will offer a unique"
+  },
+  {
+    "index": 149,
+    "style": "Normal",
+    "text": "personalized experience that will bring more value to your car through a"
+  },
+  {
+    "index": 150,
+    "style": "Normal",
+    "text": "smarter and quicker process. We are committed to great quality."
+  },
+  {
+    "index": 151,
+    "style": "Normal",
+    "text": "</p>"
+  },
+  {
+    "index": 152,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 153,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 154,
+    "style": "Normal",
+    "text": "<div class=\"col s12 m4\">"
+  },
+  {
+    "index": 155,
+    "style": "Normal",
+    "text": "<div class=\"icon-block\">"
+  },
+  {
+    "index": 156,
+    "style": "Normal",
+    "text": "<h2 class=\"center brown-text\"><i class=\"material-icons\">flash_on</i></h2>"
+  },
+  {
+    "index": 157,
+    "style": "Normal",
+    "text": "<h5 class=\"center\">Our Competency</h5>"
+  },
+  {
+    "index": 158,
+    "style": "Normal",
+    "text": "<p class=\"light\">"
+  },
+  {
+    "index": 159,
+    "style": "Normal",
+    "text": "By utilizing the elements and principles of modern"
+  },
+  {
+    "index": 160,
+    "style": "Normal",
+    "text": "mechanical engineering, we are able to resolve complex technical challenges"
+  },
+  {
+    "index": 161,
+    "style": "Normal",
+    "text": "through innovative solutions. Additionally, our service engineers are"
+  },
+  {
+    "index": 162,
+    "style": "Normal",
+    "text": "highly qualified, with advanced training in automobile engineering."
+  },
+  {
+    "index": 163,
+    "style": "Normal",
+    "text": "</p>"
+  },
+  {
+    "index": 164,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 165,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 166,
+    "style": "Normal",
+    "text": "<div class=\"col s12 m4\">"
+  },
+  {
+    "index": 167,
+    "style": "Normal",
+    "text": "<div class=\"icon-block\">"
+  },
+  {
+    "index": 168,
+    "style": "Normal",
+    "text": "<h2 class=\"center brown-text\"><i class=\"material-icons\">settings</i></h2>"
+  },
+  {
+    "index": 169,
+    "style": "Normal",
+    "text": "<h5 class=\"center\">Easy to work with</h5>"
+  },
+  {
+    "index": 170,
+    "style": "Normal",
+    "text": "<p class=\"light\">"
+  },
+  {
+    "index": 171,
+    "style": "Normal",
+    "text": "We provide detailed information and predictive analysis"
+  },
+  {
+    "index": 172,
+    "style": "Normal",
+    "text": "to help our customers understand their cars. We maintain continuous"
+  },
+  {
+    "index": 173,
+    "style": "Normal",
+    "text": "communication and are always open to feedback. We are always avaiable"
+  },
+  {
+    "index": 174,
+    "style": "Normal",
+    "text": "to answer our customers' inquiries."
+  },
+  {
+    "index": 175,
+    "style": "Normal",
+    "text": "</p>"
+  },
+  {
+    "index": 176,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 177,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 178,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 179,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 180,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 182,
+    "style": "Normal",
+    "text": "<div class=\"parallax-container valign-wrapper\">"
+  },
+  {
+    "index": 183,
+    "style": "Normal",
+    "text": "<div class=\"section no-pad-bot\">"
+  },
+  {
+    "index": 184,
+    "style": "Normal",
+    "text": "<div class=\"container\">"
+  },
+  {
+    "index": 185,
+    "style": "Normal",
+    "text": "<div class=\"row center\">"
+  },
+  {
+    "index": 186,
+    "style": "Normal",
+    "text": "<h5 class=\"header col s12 light\">"
+  },
+  {
+    "index": 187,
+    "style": "Normal",
+    "text": "Commited to delivering unprecendented"
+  },
+  {
+    "index": 188,
+    "style": "Normal",
+    "text": "quality to our customers"
+  },
+  {
+    "index": 189,
+    "style": "Normal",
+    "text": "</h5>"
+  },
+  {
+    "index": 190,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 191,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 192,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 193,
+    "style": "Normal",
+    "text": "<div class=\"parallax\">"
+  },
+  {
+    "index": 194,
+    "style": "Normal",
+    "text": "<img src=\"~/images/background2.jpg\" alt=\"Unsplashed background img 2\">"
+  },
+  {
+    "index": 195,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 196,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 198,
+    "style": "Normal",
+    "text": "<div class=\"container\">"
+  },
+  {
+    "index": 199,
+    "style": "Normal",
+    "text": "<div class=\"section\">"
+  },
+  {
+    "index": 200,
+    "style": "Normal",
+    "text": "<div class=\"row\">"
+  },
+  {
+    "index": 201,
+    "style": "Normal",
+    "text": "<div class=\"col s12 center\">"
+  },
+  {
+    "index": 202,
+    "style": "Normal",
+    "text": "<h3><i class=\"mdi-content-send brown-text\"></i></h3>"
+  },
+  {
+    "index": 203,
+    "style": "Normal",
+    "text": "<h4>Customer Value</h4>"
+  },
+  {
+    "index": 204,
+    "style": "Normal",
+    "text": "<p class=\"left-align light\">"
+  },
+  {
+    "index": 205,
+    "style": "Normal",
+    "text": "Automobile Service Center has always been a"
+  },
+  {
+    "index": 206,
+    "style": "Normal",
+    "text": "value-driven company. Many of our values are based on years of research and"
+  },
+  {
+    "index": 207,
+    "style": "Normal",
+    "text": "commitment. Our values reflect the manner in which we run our business."
+  },
+  {
+    "index": 208,
+    "style": "Normal",
+    "text": "We're proud of our professional ethics in dealing with our business"
+  },
+  {
+    "index": 209,
+    "style": "Normal",
+    "text": "partners, investors, employees, and customers. We provide customer-valued"
+  },
+  {
+    "index": 210,
+    "style": "Normal",
+    "text": "services built on our commitment to responsibility, sustainability,"
+  },
+  {
+    "index": 211,
+    "style": "Normal",
+    "text": "trust, openness, diversity, reliability, determination, credibility, and"
+  },
+  {
+    "index": 212,
+    "style": "Normal",
+    "text": "initiation. Our dedication in providing quality services is based on our"
+  },
+  {
+    "index": 213,
+    "style": "Normal",
+    "text": "great engineering-compliance model and industry-standard inspection and"
+  },
+  {
+    "index": 214,
+    "style": "Normal",
+    "text": "quality-control procedures."
+  },
+  {
+    "index": 215,
+    "style": "Normal",
+    "text": "</p>"
+  },
+  {
+    "index": 216,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 217,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 218,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 219,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 221,
+    "style": "Normal",
+    "text": "<div class=\"parallax-container valign-wrapper\">"
+  },
+  {
+    "index": 222,
+    "style": "Normal",
+    "text": "<div class=\"section no-pad-bot\">"
+  },
+  {
+    "index": 223,
+    "style": "Normal",
+    "text": "<div class=\"container\">"
+  },
+  {
+    "index": 224,
+    "style": "Normal",
+    "text": "<div class=\"row center\">"
+  },
+  {
+    "index": 225,
+    "style": "Normal",
+    "text": "<h5 class=\"header col s12 light\">"
+  },
+  {
+    "index": 226,
+    "style": "Normal",
+    "text": "Humility, Empathy, Hard Work, and Technology"
+  },
+  {
+    "index": 227,
+    "style": "Normal",
+    "text": "are our core drivers."
+  },
+  {
+    "index": 228,
+    "style": "Normal",
+    "text": "</h5>"
+  },
+  {
+    "index": 229,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 230,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 231,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 232,
+    "style": "Normal",
+    "text": "<div class=\"parallax\">"
+  },
+  {
+    "index": 233,
+    "style": "Normal",
+    "text": "<img src=\"~/images/background3.jpg\" alt=\"Unsplashed background img 3\">"
+  },
+  {
+    "index": 234,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 235,
+    "style": "Normal",
+    "text": "</div>"
+  },
+  {
+    "index": 238,
+    "style": "Normal",
+    "text": "Cập nhật style cho file wwwroot/css/styles.css để định dạng cho logo theo các độ phân giải khác nhau"
+  },
+  {
+    "index": 240,
+    "style": "Normal",
+    "text": "Kết quả sau khi chạy ứng dụng"
+  },
+  {
+    "index": 243,
+    "style": "Normal",
+    "text": "Tạo view quản trị _SecureLayout.cshtml trong thư mục shared có dạng"
+  },
+  {
+    "index": 251,
+    "style": "Normal",
+    "text": "Bổ sung styles cho Style.css."
+  },
+  {
+    "index": 253,
+    "style": "Normal",
+    "text": "Tạo Dashboard Action trong Home Controller"
+  },
+  {
+    "index": 256,
+    "style": "Normal",
+    "text": "Tạo Dashboard.cshtml trong Home"
+  },
+  {
+    "index": 259,
+    "style": "Normal",
+    "text": "Thực hiện chạy trang /Home/Dashboard có kết quả:"
+  }
+]

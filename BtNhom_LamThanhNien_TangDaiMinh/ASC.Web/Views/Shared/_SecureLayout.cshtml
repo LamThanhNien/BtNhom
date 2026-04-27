@@ -78,6 +78,15 @@
 @section Scripts {
     <script type="text/javascript">
         $(function () {
+            const syncSecureLayoutMode = function () {
+                const hasFixedSidenav = window.innerWidth > 992;
+                $('body').addClass('secure-layout');
+                $('body').toggleClass('has-fixed-sidenav', hasFixedSidenav);
+            };
+
+            syncSecureLayoutMode();
+            $(window).on('resize', syncSecureLayoutMode);
+
             // Highlight the active nav item before initializing Materialize components
             const currentPath = window.location.pathname.toLowerCase();
             $('#nav-mobile a').each(function () {

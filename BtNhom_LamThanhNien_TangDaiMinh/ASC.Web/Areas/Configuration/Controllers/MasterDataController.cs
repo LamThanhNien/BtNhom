@@ -15,11 +15,16 @@ namespace ASC.Web.Areas.Configuration.Controllers
     public class MasterDataController : BaseController
     {
         private readonly IMasterDataOperations _masterData;
+        private readonly IMasterDataCacheOperations _masterDataCache;
         private readonly IMapper _mapper;
 
-        public MasterDataController(IMasterDataOperations masterDataOperations, IMapper mapper)
+        public MasterDataController(
+            IMasterDataOperations masterDataOperations,
+            IMasterDataCacheOperations masterDataCacheOperations,
+            IMapper mapper)
         {
             _masterData = masterDataOperations;
+            _masterDataCache = masterDataCacheOperations;
             _mapper = mapper;
         }
 
@@ -56,6 +61,12 @@ namespace ASC.Web.Areas.Configuration.Controllers
 
             if (model.IsEdit)
             {
+                if (string.IsNullOrWhiteSpace(model.MasterKeyInContext.PartitionKey))
+                {
+                    ModelState.AddModelError("MasterKeyInContext.PartitionKey", "Missing partition key for update.");
+                    return View(model);
+                }
+
                 masterKey.UpdatedBy = userName;
                 masterKey.UpdatedDate = now;
                 await _masterData.UpdateMasterKeyAsync(model.MasterKeyInContext.PartitionKey, masterKey);
@@ -78,6 +89,7 @@ namespace ASC.Web.Areas.Configuration.Controllers
                 await _masterData.InsertMasterKeyAsync(masterKey);
             }
 
+            await _masterDataCache.CreateMasterDataCacheAsync();
             return RedirectToAction(nameof(MasterKeys));
         }
 
@@ -153,6 +165,7 @@ namespace ASC.Web.Areas.Configuration.Controllers
                 await _masterData.InsertMasterValueAsync(entity);
             }
 
+            await _masterDataCache.CreateMasterDataCacheAsync();
             return Json(true);
         }
 
@@ -222,6 +235,11 @@ namespace ASC.Web.Areas.Configuration.Controllers
             {
                 var masterData = await ParseMasterDataExcel(excelFile);
                 var result = await _masterData.UploadBulkMasterData(masterData);
+                if (result)
+                {
+                    await _masterDataCache.CreateMasterDataCacheAsync();
+                }
+
                 return Json(new { Success = result });
             }
             catch (Exception ex)

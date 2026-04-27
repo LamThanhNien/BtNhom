@@ -15,4 +15,9 @@ public static class ClaimsPrincipalExtensions
             Roles = principal.FindAll(ClaimTypes.Role).Select(c => c.Value).ToList()
         };
     }
+
+    public static CurrentUser GetCurrentUserDetails(this ClaimsPrincipal principal)
+    {
+        return principal.ToCurrentUser();
+    }
 }

@@ -24,7 +24,7 @@ public class LeftNavigationViewComponent : ViewComponent
         var menu = await _navigationCache.GetNavigationMenuItems();
         var filteredItems = FilterByRole(menu, userRoles);
 
-        return View("~/Views/Shared/LeftNavigation.cshtml", filteredItems);
+        return View(filteredItems);
     }
 
     private static List<MenuItem> FilterByRole(IEnumerable<MenuItem> items, IReadOnlyCollection<string> userRoles)
@@ -42,6 +42,7 @@ public class LeftNavigationViewComponent : ViewComponent
                 UserRoles = item.UserRoles,
                 NestedItems = FilterByRole(item.NestedItems, userRoles)
             })
+            .Where(item => !item.IsNested || item.NestedItems.Count > 0)
             .ToList();
     }
 }

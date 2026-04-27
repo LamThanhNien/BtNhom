@@ -18,6 +18,7 @@ main {
 
 main.secureLayout {
   flex: 1 0 auto;
+  overflow-x: auto;
 }
 
 nav ul a,
@@ -56,10 +57,43 @@ footer.page-footer {
   margin: 0;
 }
 
+body.secure-layout {
+  overflow-x: hidden;
+}
+
 header.secureLayout,
 main.secureLayout,
 footer.secureLayout {
+  padding-left: 0;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+body.secure-layout.has-fixed-sidenav header.secureLayout,
+body.secure-layout.has-fixed-sidenav main.secureLayout,
+body.secure-layout.has-fixed-sidenav footer.secureLayout {
   padding-left: 300px;
+}
+
+main.secureLayout .row,
+footer.secureLayout .row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+main.secureLayout .col {
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+main.secureLayout table,
+main.secureLayout .dataTables_wrapper {
+  max-width: 100%;
+}
+
+main.secureLayout .dataTables_wrapper {
+  overflow-x: auto;
 }
 
 .input-field.input-validation-error input,

@@ -1,5 +1,5 @@
 using ASC.Model;
-using ASC.Web.Models;
+using ASC.Web.Configuration;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -119,49 +119,101 @@ public class IdentitySeed : IIdentitySeed
 
     private async Task SeedMasterDataAsync()
     {
-        var serviceStatusKey = await _context.MasterDataKeys.FirstOrDefaultAsync(k => k.Key == "ServiceStatus");
-        if (serviceStatusKey is null)
+        var serviceStatusKey = await EnsureMasterDataKeyAsync("ServiceStatus", "Master data for Service Status");
+        var vehicleTypeKey = await EnsureMasterDataKeyAsync("VehicleType", "Master data for Vehicle Type");
+        var vehicleNameKey = await EnsureMasterDataKeyAsync("VehicleName", "Master data for Vehicle Name");
+
+        await EnsureMasterDataValuesAsync(serviceStatusKey, new[]
         {
-            serviceStatusKey = new MasterDataKey
+            ASC.Model.Status.New.ToString(),
+            ASC.Model.Status.Initiated.ToString(),
+            ASC.Model.Status.InProgress.ToString(),
+            ASC.Model.Status.PendingCustomerApproval.ToString(),
+            ASC.Model.Status.RequestForInformation.ToString(),
+            ASC.Model.Status.Pending.ToString(),
+            ASC.Model.Status.Denied.ToString(),
+            ASC.Model.Status.Completed.ToString()
+        });
+
+        await EnsureMasterDataValuesAsync(vehicleTypeKey, new[]
+        {
+            "Sedan",
+            "SUV",
+            "Truck"
+        });
+
+        await EnsureMasterDataValuesAsync(vehicleNameKey, new[]
+        {
+            "Honda Civic",
+            "Toyota Camry",
+            "Ford Ranger"
+        });
+
+        await _context.SaveChangesAsync();
+    }
+
+    private async Task<MasterDataKey> EnsureMasterDataKeyAsync(string key, string description)
+    {
+        var masterDataKey = await _context.MasterDataKeys
+            .FirstOrDefaultAsync(k => k.Key == key);
+        if (masterDataKey != null)
+        {
+            return masterDataKey;
+        }
+
+        masterDataKey = new MasterDataKey
+        {
+            Id = Guid.NewGuid().ToString(),
+            Key = key,
+            Description = description,
+            IsActive = true,
+            CreatedBy = "System",
+            CreatedDate = DateTime.UtcNow,
+            UpdatedBy = "System",
+            UpdatedDate = DateTime.UtcNow
+        };
+
+        _context.MasterDataKeys.Add(masterDataKey);
+        await _context.SaveChangesAsync();
+        return masterDataKey;
+    }
+
+    private async Task EnsureMasterDataValuesAsync(MasterDataKey key, IReadOnlyList<string> defaults)
+    {
+        var existingValues = await _context.MasterDataValues
+            .Where(v => v.MasterDataKeyId == key.Id)
+            .Select(v => v.Value)
+            .ToListAsync();
+
+        var existingSet = existingValues
+            .Where(v => !string.IsNullOrWhiteSpace(v))
+            .Select(v => v.Replace(" ", string.Empty).ToUpper())
+            .ToHashSet();
+
+        for (var i = 0; i < defaults.Count; i++)
+        {
+            var value = defaults[i];
+            var normalizedValue = value.Replace(" ", string.Empty).ToUpper();
+            if (existingSet.Contains(normalizedValue))
+            {
+                continue;
+            }
+
+            _context.MasterDataValues.Add(new MasterDataValue
             {
                 Id = Guid.NewGuid().ToString(),
-                Key = "ServiceStatus",
-                Description = "Master data for Service Status",
+                Value = value,
+                Description = value,
+                DisplayOrder = i + 1,
+                IsActive = true,
+                MasterDataKeyId = key.Id,
                 CreatedBy = "System",
                 CreatedDate = DateTime.UtcNow,
                 UpdatedBy = "System",
                 UpdatedDate = DateTime.UtcNow
-            };
-            _context.MasterDataKeys.Add(serviceStatusKey);
-            await _context.SaveChangesAsync();
+            });
+
+            existingSet.Add(normalizedValue);
         }
-
-        var defaults = new[] { "New", "In Progress", "Completed" };
-        for (var i = 0; i < defaults.Length; i++)
-        {
-            var status = defaults[i];
-            var exists = await _context.MasterDataValues.AnyAsync(v =>
-                v.MasterDataKeyId == serviceStatusKey.Id &&
-                v.Value == status);
-
-            if (!exists)
-            {
-                _context.MasterDataValues.Add(new MasterDataValue
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Value = status,
-                    Description = status,
-                    DisplayOrder = i + 1,
-                    IsActive = true,
-                    MasterDataKeyId = serviceStatusKey.Id,
-                    CreatedBy = "System",
-                    CreatedDate = DateTime.UtcNow,
-                    UpdatedBy = "System",
-                    UpdatedDate = DateTime.UtcNow
-                });
-            }
-        }
-
-        await _context.SaveChangesAsync();
     }
 }

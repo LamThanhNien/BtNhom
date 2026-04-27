@@ -6,7 +6,7 @@ using MimeKit;
 
 namespace ASC.Web.Services;
 
-public class AuthMessageSender : IEmailSender
+public class AuthMessageSender : IEmailSender, ISmsSender
 {
     private readonly EmailSettings _settings;
     private readonly ILogger<AuthMessageSender> _logger;
@@ -47,5 +47,11 @@ public class AuthMessageSender : IEmailSender
         await client.AuthenticateAsync(username, _settings.Password);
         await client.SendAsync(message);
         await client.DisconnectAsync(true);
+    }
+
+    public Task SendSmsAsync(string number, string message)
+    {
+        _logger.LogInformation("SMS sender is not configured. Skip sending SMS to {Number}.", number);
+        return Task.CompletedTask;
     }
 }

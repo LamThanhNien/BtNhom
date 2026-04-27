@@ -1,0 +1,1307 @@
+[
+  {
+    "index": 1,
+    "style": "Normal",
+    "text": "Securing the Application with ASP.NET Core Identity and the OAuth 2.0 Protocol"
+  },
+  {
+    "index": 2,
+    "style": "List Paragraph",
+    "text": "Creating and Setting Up the Admin Account"
+  },
+  {
+    "index": 3,
+    "style": "Normal",
+    "text": "Admin phải có quyền truy cập vào toàn bộ trang web và có thể quản lý dữ liệu trong toàn bộ ứng dụng. Quản trị viên cũng nên tạo và quản lý các kỹ sư dịch vụ. Trong phần này, bạn sẽ học cách bắt đầu với ASP.NET Core Identity, đánh giá tất cả các yếu tố cần thiết và tạo tài khoản Quản trị viên trong lần chạy đầu tiên của ứng dụng."
+  },
+  {
+    "index": 4,
+    "style": "Normal",
+    "text": "AccountController là một thành phần quan trọng của toàn bộ cơ sở mã xác thực và được tạo theo mặc định bởi Visual Studio. Nó bao gồm các API và phương thức sau:"
+  },
+  {
+    "index": 5,
+    "style": "List Paragraph",
+    "text": "UserManager: Đây là một phần của Microsoft.AspNetCore.Identity API do Microsoft cung cấp và nó cung cấp các API để quản lý người dùng trong một kho lưu trữ liên tục"
+  },
+  {
+    "index": 6,
+    "style": "List Paragraph",
+    "text": "SigninManager: Đây là một phần của Microsoft.AspNetCore.Identity API do Microsoft cung cấp và nó cung cấp các API để quản lý hoạt động đăng nhập cho người dùng từ các nguồn khác nhau."
+  },
+  {
+    "index": 7,
+    "style": "List Paragraph",
+    "text": "IEmailSender, ISmsSender và ILogger:"
+  },
+  {
+    "index": 8,
+    "style": "List Paragraph",
+    "text": "IEmailSender được AccountController sử dụng để gửi e-mail xác nhận tài khoản và đặt lại mật khẩu."
+  },
+  {
+    "index": 9,
+    "style": "List Paragraph",
+    "text": "ISmsSender được sử dụng để xác thực hai yếu tố."
+  },
+  {
+    "index": 10,
+    "style": "List Paragraph",
+    "text": "ILogger được sử dụng để ghi lại các thông báo và thông tin về quá trình đăng nhập của người dùng."
+  },
+  {
+    "index": 11,
+    "style": "List Paragraph",
+    "text": "Phương thức hành động: AccountController có các hành động bộ điều khiển mặc định được sử dụng để thực hiện các hoạt động liên quan đến xác thực khác nhau. Các hành động được sử dụng cho những việc sau: Đăng ký, Đăng nhập, Đăng xuất, Đăng nhập Nguồn Bên ngoài, Quên Mật khẩu, Đặt lại Mật khẩu, Xác thực Hai yếu tố và Gửi và Xác minh Mã"
+  },
+  {
+    "index": 12,
+    "style": "List Paragraph",
+    "text": "Right Click project ASC.Web -> Add -> new Scaffolder Item -> Identity -> Identity -> Add"
+  },
+  {
+    "index": 17,
+    "style": "List Paragraph",
+    "text": "Cấu trúc lại services"
+  },
+  {
+    "index": 18,
+    "style": "List Paragraph",
+    "text": "Tạo class DependencyInjection"
+  },
+  {
+    "index": 21,
+    "style": "List Paragraph",
+    "text": "Cập nhật Program.cs"
+  },
+  {
+    "index": 25,
+    "style": "List Paragraph",
+    "text": "Xử lý Login, Logout, ResetPassword, ForgotPassword"
+  },
+  {
+    "index": 26,
+    "style": "List Paragraph",
+    "text": "Create Area ServiceRequests : xử lý các nghiệp vụ liên quan đến yêu cầu dịch vụ"
+  },
+  {
+    "index": 27,
+    "style": "List Paragraph",
+    "text": "Right Click  ASC.Web -> Add New Scaffolded Item -> MVC Area"
+  },
+  {
+    "index": 29,
+    "style": "List Paragraph",
+    "text": "Cấu hình lại định tuyến Area => cập nhật program.cs"
+  },
+  {
+    "index": 31,
+    "style": "List Paragraph",
+    "text": "Xử lý session"
+  },
+  {
+    "index": 32,
+    "style": "List Paragraph",
+    "text": "Cài Microsoft.AspNetCore.Session từ nuget cho ASC.Web và ASC.Utilitis"
+  },
+  {
+    "index": 34,
+    "style": "List Paragraph",
+    "text": "Tạo class SessionExtensions để lấy và lưu session"
+  },
+  {
+    "index": 37,
+    "style": "List Paragraph",
+    "text": "Tạo class CurrentUser lưu trữ thông tin user hiện hành"
+  },
+  {
+    "index": 40,
+    "style": "List Paragraph",
+    "text": "Tạo class ClaimsPrincipalExtensions để lấy thông tin user đăng nhập từ  ClaimsPrincipal"
+  },
+  {
+    "index": 42,
+    "style": "List Paragraph",
+    "text": "Add session trong DependencyInjection.cs => phương thức AddMyDependencyGroup"
+  },
+  {
+    "index": 46,
+    "style": "List Paragraph",
+    "text": "Cập nhật view  và code xử lý razor  login"
+  },
+  {
+    "index": 49,
+    "style": "List Paragraph",
+    "text": "Cập nhật code xử lý Login.cshtml.cs"
+  },
+  {
+    "index": 53,
+    "style": "List Paragraph",
+    "text": "Cập nhật lại Phương Thức GET của Login.cshtml.cs trong Areas.Identity.Pages.Account để clear đăng nhập và hiển thị form login."
+  },
+  {
+    "index": 56,
+    "style": "List Paragraph",
+    "text": "Cập nhật lại Phương Thức POST của Login.cshtml.cs trong Areas.Identity.Pages.Account để khi đăng nhập thành công thì điều hướng đến View dashboard."
+  },
+  {
+    "index": 61,
+    "style": "List Paragraph",
+    "text": "Cập nhật view Login.cshtml"
+  },
+  {
+    "index": 63,
+    "style": "List Paragraph",
+    "text": "Tạo controler BaseController.cs  với thuộc tính Authorize trong thư mục ASC.Web.Controllers, để mọi hành động bên trong bộ điều khiển này hoặc trong bất kỳ bộ điều khiển nào được kế thừa từ BaseController này, đều yêu cầu đăng nhập"
+  },
+  {
+    "index": 65,
+    "style": "List Paragraph",
+    "text": "Tạo controler  AnonymousController.cs không có thuộc tính Authorize trong thư mục ASC.Web.Controllers, cho phép các controller kế thừa không yêu cầu đăng nhập"
+  },
+  {
+    "index": 67,
+    "style": "List Paragraph",
+    "text": "Tạo DashboardController.cs kế thừa từ BaseController trong ASC.Web.Area. ServiceRequests.Controllers. Tạo action Dashboard"
+  },
+  {
+    "index": 71,
+    "style": "List Paragraph",
+    "text": "Tạo view cho action Dashboard (Dashboard.cshtml)"
+  },
+  {
+    "index": 79,
+    "style": "List Paragraph",
+    "text": "Khi đó người dùng ẩn danh (anonymous  user) cố gắng truy view Dasboard.cshtml đều sẽ điều hướng đến trang Login page."
+  },
+  {
+    "index": 81,
+    "style": "List Paragraph",
+    "text": "Cập nhật HomeController.cs kế thừa từ AnonymousController và xóa action Dashboard."
+  },
+  {
+    "index": 83,
+    "style": "List Paragraph",
+    "text": "Khi đó bất cứ người dùn nào đều có thể truy vào các trang trong home mà không cần đăng nhập."
+  },
+  {
+    "index": 84,
+    "style": "List Paragraph",
+    "text": "Thêm mã RenderSection sau vào cuối _Layout.cshtml và _SecureLayout.cshtml để hỗ trợ phần tập lệnh JQuery, để truyền phần tập lệnh từ master layout vào các layout kế thừa."
+  },
+  {
+    "index": 86,
+    "style": "List Paragraph",
+    "text": "Cập nhật Style.css"
+  },
+  {
+    "index": 88,
+    "style": "Normal",
+    "text": ".input-field .input-validation-error {"
+  },
+  {
+    "index": 89,
+    "style": "Normal",
+    "text": "border-bottom: 1px solid #FF4081;"
+  },
+  {
+    "index": 90,
+    "style": "Normal",
+    "text": "box-shadow: 0 1px 0 0 #FF4081;"
+  },
+  {
+    "index": 91,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 93,
+    "style": "Normal",
+    "text": ".input-field .valid {"
+  },
+  {
+    "index": 94,
+    "style": "Normal",
+    "text": "border-bottom: 1px solid #00E676;"
+  },
+  {
+    "index": 95,
+    "style": "Normal",
+    "text": "box-shadow: 0 1px 0 0 #00E676;"
+  },
+  {
+    "index": 96,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 98,
+    "style": "Normal",
+    "text": ".validation-summary-errors {"
+  },
+  {
+    "index": 99,
+    "style": "Normal",
+    "text": "color: #FF4081;"
+  },
+  {
+    "index": 100,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 101,
+    "style": "List Paragraph",
+    "text": "Đảm bảo _MasterLayout.cshtml có tham chiếu JavaScript"
+  },
+  {
+    "index": 103,
+    "style": "List Paragraph",
+    "text": "<script src=\"https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js\"></script>"
+  },
+  {
+    "index": 105,
+    "style": "List Paragraph",
+    "text": "Cập nhật _Layout.cshtml để khi click login hiển thị form đăng nhập"
+  },
+  {
+    "index": 109,
+    "style": "List Paragraph",
+    "text": "Chạy ứng dụng và click vào Login"
+  },
+  {
+    "index": 113,
+    "style": "List Paragraph",
+    "text": "Cập nhật lại Phương Thức POST của Login.cshtml.cs trong Areas.Identity.Pages.Account để khi đăng nhập thành công thì điều hướng đến View dashboard."
+  },
+  {
+    "index": 114,
+    "style": "List Paragraph",
+    "text": "Thực hiện đăng nhập với email và pass để truy cập vào Dashboard"
+  },
+  {
+    "index": 117,
+    "style": "List Paragraph",
+    "text": "Xử lý Navigation động theo phân quyền"
+  },
+  {
+    "index": 120,
+    "style": "List Paragraph",
+    "text": "Tạo Navigation.json lưu cấu trúc menu"
+  },
+  {
+    "index": 121,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 122,
+    "style": "Normal",
+    "text": "\"MenuItems\": ["
+  },
+  {
+    "index": 123,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 124,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Dashboard\","
+  },
+  {
+    "index": 125,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"dashboard\","
+  },
+  {
+    "index": 126,
+    "style": "Normal",
+    "text": "\"Link\": \"/ServiceRequests/Dashboard/Dashboard\","
+  },
+  {
+    "index": 127,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 128,
+    "style": "Normal",
+    "text": "\"Sequence\": 1,"
+  },
+  {
+    "index": 129,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 130,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 131,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 132,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 133,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"User Administration\","
+  },
+  {
+    "index": 134,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"supervisor_account\","
+  },
+  {
+    "index": 135,
+    "style": "Normal",
+    "text": "\"Link\": \"\","
+  },
+  {
+    "index": 136,
+    "style": "Normal",
+    "text": "\"IsNested\": true,"
+  },
+  {
+    "index": 137,
+    "style": "Normal",
+    "text": "\"Sequence\": 2,"
+  },
+  {
+    "index": 138,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"Admin\" ],"
+  },
+  {
+    "index": 139,
+    "style": "Normal",
+    "text": "\"NestedItems\": ["
+  },
+  {
+    "index": 140,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 141,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Customers\","
+  },
+  {
+    "index": 142,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"account_box\","
+  },
+  {
+    "index": 143,
+    "style": "Normal",
+    "text": "\"Link\": \"/Accounts/Account/Customers\","
+  },
+  {
+    "index": 144,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 145,
+    "style": "Normal",
+    "text": "\"Sequence\": 1,"
+  },
+  {
+    "index": 146,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"Admin\" ],"
+  },
+  {
+    "index": 147,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 148,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 149,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 150,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Service Engineers\","
+  },
+  {
+    "index": 151,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"person_add\","
+  },
+  {
+    "index": 152,
+    "style": "Normal",
+    "text": "\"Link\": \"/Accounts/Account/ServiceEngineers\","
+  },
+  {
+    "index": 153,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 154,
+    "style": "Normal",
+    "text": "\"Sequence\": 2,"
+  },
+  {
+    "index": 155,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"Admin\" ],"
+  },
+  {
+    "index": 156,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 157,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 158,
+    "style": "Normal",
+    "text": "]"
+  },
+  {
+    "index": 159,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 160,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 161,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Service Requests\","
+  },
+  {
+    "index": 162,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"local_laundry_service\","
+  },
+  {
+    "index": 163,
+    "style": "Normal",
+    "text": "\"Link\": \"\","
+  },
+  {
+    "index": 164,
+    "style": "Normal",
+    "text": "\"IsNested\": true,"
+  },
+  {
+    "index": 165,
+    "style": "Normal",
+    "text": "\"Sequence\": 3,"
+  },
+  {
+    "index": 166,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 167,
+    "style": "Normal",
+    "text": "\"NestedItems\": ["
+  },
+  {
+    "index": 168,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 169,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"New Service Request\","
+  },
+  {
+    "index": 170,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"insert_invitation\","
+  },
+  {
+    "index": 171,
+    "style": "Normal",
+    "text": "\"Link\": \"/ServiceRequests/ServiceRequest/ServiceRequest\","
+  },
+  {
+    "index": 172,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 173,
+    "style": "Normal",
+    "text": "\"Sequence\": 1,"
+  },
+  {
+    "index": 174,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 175,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 176,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 177,
+    "style": "Normal",
+    "text": "]"
+  },
+  {
+    "index": 178,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 179,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 180,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Service Notifications\","
+  },
+  {
+    "index": 181,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"message\","
+  },
+  {
+    "index": 182,
+    "style": "Normal",
+    "text": "\"Link\": \"/ServiceRequests/Dashboard/Dashboard\","
+  },
+  {
+    "index": 183,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 184,
+    "style": "Normal",
+    "text": "\"Sequence\": 4,"
+  },
+  {
+    "index": 185,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 186,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 187,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 188,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 189,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Promotions\","
+  },
+  {
+    "index": 190,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"inbox\","
+  },
+  {
+    "index": 191,
+    "style": "Normal",
+    "text": "\"Link\": \"/ServiceRequests/Dashboard/Dashboard\","
+  },
+  {
+    "index": 192,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 193,
+    "style": "Normal",
+    "text": "\"Sequence\": 5,"
+  },
+  {
+    "index": 194,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 195,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 196,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 197,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 198,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Master Data\","
+  },
+  {
+    "index": 199,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"perm_data_setting\","
+  },
+  {
+    "index": 200,
+    "style": "Normal",
+    "text": "\"Link\": \"\","
+  },
+  {
+    "index": 201,
+    "style": "Normal",
+    "text": "\"IsNested\": true,"
+  },
+  {
+    "index": 202,
+    "style": "Normal",
+    "text": "\"Sequence\": 6,"
+  },
+  {
+    "index": 203,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"Admin\" ],"
+  },
+  {
+    "index": 204,
+    "style": "Normal",
+    "text": "\"NestedItems\": ["
+  },
+  {
+    "index": 205,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 206,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Master Keys\","
+  },
+  {
+    "index": 207,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"data_usage\","
+  },
+  {
+    "index": 208,
+    "style": "Normal",
+    "text": "\"Link\": \"/Configuration/MasterData/MasterKeys\","
+  },
+  {
+    "index": 209,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 210,
+    "style": "Normal",
+    "text": "\"Sequence\": 1,"
+  },
+  {
+    "index": 211,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"Admin\" ],"
+  },
+  {
+    "index": 212,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 213,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 214,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 215,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Master Values\","
+  },
+  {
+    "index": 216,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"settings_system_daydream\","
+  },
+  {
+    "index": 217,
+    "style": "Normal",
+    "text": "\"Link\": \"/Configuration/MasterData/MasterValues\","
+  },
+  {
+    "index": 218,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 219,
+    "style": "Normal",
+    "text": "\"Sequence\": 2,"
+  },
+  {
+    "index": 220,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"Admin\" ],"
+  },
+  {
+    "index": 221,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 222,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 223,
+    "style": "Normal",
+    "text": "]"
+  },
+  {
+    "index": 224,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 225,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 226,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Settings\","
+  },
+  {
+    "index": 227,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"settings\","
+  },
+  {
+    "index": 228,
+    "style": "Normal",
+    "text": "\"Link\": \"\","
+  },
+  {
+    "index": 229,
+    "style": "Normal",
+    "text": "\"IsNested\": true,"
+  },
+  {
+    "index": 230,
+    "style": "Normal",
+    "text": "\"Sequence\": 7,"
+  },
+  {
+    "index": 231,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 232,
+    "style": "Normal",
+    "text": "\"NestedItems\": ["
+  },
+  {
+    "index": 233,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 234,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Profile\","
+  },
+  {
+    "index": 235,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"system_update_alt\","
+  },
+  {
+    "index": 236,
+    "style": "Normal",
+    "text": "\"Link\": \"/Accounts/Account/Profile\","
+  },
+  {
+    "index": 237,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 238,
+    "style": "Normal",
+    "text": "\"Sequence\": 1,"
+  },
+  {
+    "index": 239,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 240,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 241,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 242,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 243,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Reset Password\","
+  },
+  {
+    "index": 244,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"lock_outline\","
+  },
+  {
+    "index": 245,
+    "style": "Normal",
+    "text": "\"Link\": \"#!\","
+  },
+  {
+    "index": 246,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 247,
+    "style": "Normal",
+    "text": "\"Sequence\": 2,"
+  },
+  {
+    "index": 248,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 249,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 250,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 251,
+    "style": "Normal",
+    "text": "]"
+  },
+  {
+    "index": 252,
+    "style": "Normal",
+    "text": "},"
+  },
+  {
+    "index": 253,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 254,
+    "style": "Normal",
+    "text": "\"DisplayName\": \"Logout\","
+  },
+  {
+    "index": 255,
+    "style": "Normal",
+    "text": "\"MaterialIcon\": \"exit_to_app\","
+  },
+  {
+    "index": 256,
+    "style": "Normal",
+    "text": "\"Link\": \"#!\","
+  },
+  {
+    "index": 257,
+    "style": "Normal",
+    "text": "\"IsNested\": false,"
+  },
+  {
+    "index": 258,
+    "style": "Normal",
+    "text": "\"Sequence\": 8,"
+  },
+  {
+    "index": 259,
+    "style": "Normal",
+    "text": "\"UserRoles\": [ \"User\", \"Engineer\", \"Admin\" ],"
+  },
+  {
+    "index": 260,
+    "style": "Normal",
+    "text": "\"NestedItems\": []"
+  },
+  {
+    "index": 261,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 262,
+    "style": "Normal",
+    "text": "]"
+  },
+  {
+    "index": 263,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 264,
+    "style": "List Paragraph",
+    "text": "Tạo class NavigationModels.cs để lưu trữ thông tin menu"
+  },
+  {
+    "index": 266,
+    "style": "List Paragraph",
+    "text": "Xử lý đọc thông tin menu từ  Navigation.json vào hệ thống"
+  },
+  {
+    "index": 267,
+    "style": "List Paragraph",
+    "text": "Tạo interface interface InavigationCacheOperations"
+  },
+  {
+    "index": 269,
+    "style": "Normal",
+    "text": "Tạo class NavigationCacheOperations"
+  },
+  {
+    "index": 271,
+    "style": "List Paragraph",
+    "text": "Add service NavigationCacheOperations và Cache => cập nhật class DependencyInjection => phương thức AddMyDependencyGroup"
+  },
+  {
+    "index": 274,
+    "style": "List Paragraph",
+    "text": "Đọc thông tin menu từ Navigation.jdon lưu vào bộ nhớ đệm (Cache)=>"
+  },
+  {
+    "index": 275,
+    "style": "List Paragraph",
+    "text": "Cập program.cs"
+  },
+  {
+    "index": 277,
+    "style": "List Paragraph",
+    "text": "Tạo LeftNavigationViewComponent.cs code xử lý cho mennu"
+  },
+  {
+    "index": 281,
+    "style": "List Paragraph",
+    "text": "Tạo LeftNavigation View Component cho mennu"
+  },
+  {
+    "index": 283,
+    "style": "List Paragraph",
+    "text": "Default.cshtml"
+  },
+  {
+    "index": 285,
+    "style": "List Paragraph",
+    "text": "Cập nhật _SecureLayout.cshtml"
+  },
+  {
+    "index": 287,
+    "style": "List Paragraph",
+    "text": "Cập nhật _SecureLayout.cshtml để xứ lý logout và resetpassword"
+  },
+  {
+    "index": 290,
+    "style": "Normal",
+    "text": "@section Scripts {"
+  },
+  {
+    "index": 291,
+    "style": "Normal",
+    "text": "@RenderSection(\"Scripts\", required: false)"
+  },
+  {
+    "index": 292,
+    "style": "Normal",
+    "text": "<script type=\"text/javascript\">"
+  },
+  {
+    "index": 293,
+    "style": "Normal",
+    "text": "$(function () {"
+  },
+  {
+    "index": 294,
+    "style": "Normal",
+    "text": "$('#ancrLogout').click(function () {"
+  },
+  {
+    "index": 295,
+    "style": "Normal",
+    "text": "$('#logout_form').submit();"
+  },
+  {
+    "index": 296,
+    "style": "Normal",
+    "text": "});"
+  },
+  {
+    "index": 297,
+    "style": "Normal",
+    "text": "$('#ancrResetPassword').click(function () {"
+  },
+  {
+    "index": 298,
+    "style": "Normal",
+    "text": "$('#resetPassword_form').submit();"
+  },
+  {
+    "index": 299,
+    "style": "Normal",
+    "text": "});"
+  },
+  {
+    "index": 300,
+    "style": "Normal",
+    "text": "});"
+  },
+  {
+    "index": 301,
+    "style": "Normal",
+    "text": "</script>"
+  },
+  {
+    "index": 302,
+    "style": "Normal",
+    "text": "<script type=\"text/javascript\">"
+  },
+  {
+    "index": 303,
+    "style": "Normal",
+    "text": "$(document).ready(function () {"
+  },
+  {
+    "index": 304,
+    "style": "Normal",
+    "text": "$('.collapsible').collapsible();"
+  },
+  {
+    "index": 305,
+    "style": "Normal",
+    "text": "});"
+  },
+  {
+    "index": 306,
+    "style": "Normal",
+    "text": "</script>"
+  },
+  {
+    "index": 307,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 309,
+    "style": "Normal",
+    "text": "@RenderSection(\"Scripts\", required: false)"
+  },
+  {
+    "index": 312,
+    "style": "List Paragraph",
+    "text": "Cập nhật phương thức Post Logout.cshtml.cs trong Identity/Pages/Account"
+  },
+  {
+    "index": 314,
+    "style": "List Paragraph",
+    "text": "Tạo Razor Page xử lý reset password InitiateResetPassword"
+  },
+  {
+    "index": 315,
+    "style": "List Paragraph",
+    "text": "Right Account => Add new Item => Razor Page - Empty"
+  },
+  {
+    "index": 317,
+    "style": "List Paragraph",
+    "text": "Cập nhật cử lý code"
+  },
+  {
+    "index": 318,
+    "style": "List Paragraph",
+    "text": "InitiateResetPassword.cshtml.cs"
+  },
+  {
+    "index": 320,
+    "style": "List Paragraph",
+    "text": "Chú ý IEmailSender  từ using ASC.Web.Services;"
+  },
+  {
+    "index": 322,
+    "style": "List Paragraph",
+    "text": "Cập nhật Razor Page ResetPasswordEmailConfirmation.cshtml trong Account"
+  },
+  {
+    "index": 325,
+    "style": "List Paragraph",
+    "text": "ResetPasswordEmailConfirmation.cshtml"
+  },
+  {
+    "index": 327,
+    "style": "List Paragraph",
+    "text": "Xử lý gửi mail"
+  },
+  {
+    "index": 328,
+    "style": "List Paragraph",
+    "text": "Cập nhật appsettings.json"
+  },
+  {
+    "index": 330,
+    "style": "List Paragraph",
+    "text": "Sử dụng Nuget cài MailKit cho ASC.Web"
+  },
+  {
+    "index": 333,
+    "style": "List Paragraph",
+    "text": "Cập nhật phương thức gửi mail từ gmail từ class AuthMessageSender"
+  },
+  {
+    "index": 336,
+    "style": "List Paragraph",
+    "text": "Chạy lại ứng dụng và đăng nhập 2 loại tài khoản khác nhau:"
+  },
+  {
+    "index": 337,
+    "style": "List Paragraph",
+    "text": "Tài khoản admin"
+  },
+  {
+    "index": 340,
+    "style": "List Paragraph",
+    "text": "Tài khoản Engineer"
+  },
+  {
+    "index": 342,
+    "style": "List Paragraph",
+    "text": "Thực hiện reset password"
+  },
+  {
+    "index": 344,
+    "style": "List Paragraph",
+    "text": "Hiển thị màn hình xác nhận gửi đến địa chỉ mail"
+  },
+  {
+    "index": 346,
+    "style": "Normal",
+    "text": "Truy cập mail"
+  },
+  {
+    "index": 348,
+    "style": "Normal",
+    "text": "Và click vào link để truy cập màn hình ResetPassword"
+  },
+  {
+    "index": 349,
+    "style": "Normal",
+    "text": "Cập nhật xử lý code  ResetPassword.cshtml.cs"
+  },
+  {
+    "index": 353,
+    "style": "Normal",
+    "text": "Cập nhật view ResetPassword.cshtml"
+  },
+  {
+    "index": 355,
+    "style": "Normal",
+    "text": "Kết quả chạy"
+  },
+  {
+    "index": 359,
+    "style": "List Paragraph",
+    "text": "Xử lý forgot password khi click vào form login"
+  },
+  {
+    "index": 361,
+    "style": "List Paragraph",
+    "text": "//Account/Login.cshtml"
+  },
+  {
+    "index": 363,
+    "style": "List Paragraph",
+    "text": "Cập nhật  view cho Account/ ForgotPassword.cshtml"
+  },
+  {
+    "index": 366,
+    "style": "List Paragraph",
+    "text": "Cập nhật code xử lý  Account/ ForgotPassword.cshtml.cs"
+  },
+  {
+    "index": 376,
+    "style": "List Paragraph",
+    "text": "Cập nhật init.js trong wwwroot/js  để chặn back and forward button và right-click"
+  },
+  {
+    "index": 378,
+    "style": "Normal",
+    "text": "Thực hiện chức năng forgot password"
+  },
+  {
+    "index": 381,
+    "style": "Normal",
+    "text": "Check email"
+  }
+]

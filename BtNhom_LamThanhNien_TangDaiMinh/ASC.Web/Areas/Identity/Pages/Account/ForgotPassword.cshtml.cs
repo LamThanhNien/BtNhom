@@ -1,5 +1,5 @@
 using System.Text;
-using ASC.Web.Models;
+using ASC.Web.Configuration;
 using ASC.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

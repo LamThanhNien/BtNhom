@@ -57,6 +57,7 @@ namespace ASC.Business
 
             masterKey.Key = key.Key;
             masterKey.Description = key.Description;
+            masterKey.IsActive = key.IsActive;
             masterKey.UpdatedBy = key.UpdatedBy;
             masterKey.UpdatedDate = key.UpdatedDate;
 

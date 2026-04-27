@@ -1,0 +1,177 @@
+[
+  {
+    "index": 1,
+    "style": "Normal",
+    "text": "LAB 6. Master Data Management (Roles Admin)"
+  },
+  {
+    "index": 3,
+    "style": "List Paragraph",
+    "text": "Tầng ASC.Model"
+  },
+  {
+    "index": 5,
+    "style": "List Paragraph",
+    "text": "Tầng ASC.DataAccess"
+  },
+  {
+    "index": 7,
+    "style": "List Paragraph",
+    "text": "Tầng ASC. Business"
+  },
+  {
+    "index": 8,
+    "style": "List Paragraph",
+    "text": "Tạo references projects"
+  },
+  {
+    "index": 11,
+    "style": "List Paragraph",
+    "text": "/Interfaces/ ImasterDataOperations.cs"
+  },
+  {
+    "index": 13,
+    "style": "List Paragraph",
+    "text": "// MasterDataOperations.cs"
+  },
+  {
+    "index": 19,
+    "style": "List Paragraph",
+    "text": "Tầng ASC.Web"
+  },
+  {
+    "index": 20,
+    "style": "List Paragraph",
+    "text": "User Case Master Data Management"
+  },
+  {
+    "index": 21,
+    "style": "Normal",
+    "text": "B1. Sử dụng AutoMapper để ánh xạ các model từ layer  ASC.Business với các model. Cài AutoMapper.Extensions.Microsoft.DependencyInjection bằng nuget cho ASC.Web"
+  },
+  {
+    "index": 23,
+    "style": "List Paragraph",
+    "text": "B2. Tạo Areas Configuration: xử lý thêm dữ liệu cấu hình cho dự án"
+  },
+  {
+    "index": 28,
+    "style": "List Paragraph",
+    "text": "B3. Tạo các models"
+  },
+  {
+    "index": 29,
+    "style": "List Paragraph",
+    "text": "// MasterDataKeyViewModel.cs"
+  },
+  {
+    "index": 31,
+    "style": "List Paragraph",
+    "text": "// MasterKeysViewModel.cs"
+  },
+  {
+    "index": 33,
+    "style": "List Paragraph",
+    "text": "// MasterDataValueViewModel.cs"
+  },
+  {
+    "index": 36,
+    "style": "List Paragraph",
+    "text": "//MasterValuesViewModel.cs"
+  },
+  {
+    "index": 38,
+    "style": "List Paragraph",
+    "text": "//MappingProfile.cs"
+  },
+  {
+    "index": 40,
+    "style": "Normal",
+    "text": "B4. Add  AddMyDependencyGroup in DependencyInjection"
+  },
+  {
+    "index": 41,
+    "style": "Normal",
+    "text": "public static IServiceCollection AddMyDependencyGroup(this IServiceCollection services)"
+  },
+  {
+    "index": 42,
+    "style": "Normal",
+    "text": "{"
+  },
+  {
+    "index": 43,
+    "style": "Normal",
+    "text": "…."
+  },
+  {
+    "index": 44,
+    "style": "Normal",
+    "text": "//Add MasterDataOperations"
+  },
+  {
+    "index": 45,
+    "style": "Normal",
+    "text": "services.AddScoped<IMasterDataOperations, MasterDataOperations>();"
+  },
+  {
+    "index": 46,
+    "style": "Normal",
+    "text": "services.AddAutoMapper(typeof(ApplicationDbContext));"
+  },
+  {
+    "index": 47,
+    "style": "Normal",
+    "text": "//"
+  },
+  {
+    "index": 49,
+    "style": "Normal",
+    "text": "return services;"
+  },
+  {
+    "index": 50,
+    "style": "Normal",
+    "text": "}"
+  },
+  {
+    "index": 52,
+    "style": "List Paragraph",
+    "text": "B5. Controller /Configuration/Controllers/MasterDataController"
+  },
+  {
+    "index": 55,
+    "style": "List Paragraph",
+    "text": "//Master Value"
+  },
+  {
+    "index": 58,
+    "style": "List Paragraph",
+    "text": "//Upload excel"
+  },
+  {
+    "index": 61,
+    "style": "List Paragraph",
+    "text": "B5. Tạo View cho action MasterKeys.cshtml"
+  },
+  {
+    "index": 66,
+    "style": "List Paragraph",
+    "text": "B6. Tạo View cho action MasterValues.cshtml"
+  },
+  {
+    "index": 78,
+    "style": "List Paragraph",
+    "text": "B6. Chạy dự án"
+  },
+  {
+    "index": 82,
+    "style": "List Paragraph",
+    "text": "//Giao diện masterkey"
+  },
+  {
+    "index": 85,
+    "style": "List Paragraph",
+    "text": "//Giao diện mastervalue"
+  }
+]

@@ -14,6 +14,7 @@ namespace ASC.Web.Data
         public DbSet<ServiceRequest> ServiceRequests { get; set; }
         public DbSet<MasterDataKey> MasterDataKeys { get; set; }
         public DbSet<MasterDataValue> MasterDataValues { get; set; }
+        public DbSet<Books> Books { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

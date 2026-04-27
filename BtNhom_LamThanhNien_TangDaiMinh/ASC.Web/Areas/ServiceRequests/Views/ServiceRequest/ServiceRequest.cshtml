@@ -1,0 +1,91 @@
+@model ASC.Web.Areas.ServiceRequests.Models.NewServiceRequestViewModel
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.Rendering
+@{
+    Layout = "_SecureLayout";
+    ViewData["Title"] = "New Service Request";
+}
+
+<div class="row"></div>
+<div class="row padding-top-20px padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="section white-text padding-left-10px blue-grey lighten-1">
+            <h5>New Service Request</h5>
+        </div>
+        <div class="divider"></div>
+
+        <form asp-controller="ServiceRequest" asp-action="ServiceRequest" method="post" class="col s12">
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="input-field col s4">
+                    <select asp-for="VehicleName" asp-items="@(new SelectList(ViewBag.VehicleNames, "RowKey", "Name"))" required="required">
+                        <option value="">Please select one</option>
+                    </select>
+                    <label asp-for="VehicleName"></label>
+                    <span asp-validation-for="VehicleName" class="red-text"></span>
+                </div>
+                <div class="input-field col s4">
+                    <select asp-for="VehicleType" asp-items="@(new SelectList(ViewBag.VehicleTypes, "RowKey", "Name"))" required="required">
+                        <option value="">Please select one</option>
+                    </select>
+                    <label asp-for="VehicleType"></label>
+                    <span asp-validation-for="VehicleType" class="red-text"></span>
+                </div>
+                <div class="input-field col s4">
+                    <input asp-for="RequestedDate"
+                           id="RequestedDate"
+                           type="text"
+                           class="datepicker"
+                           value="@(Model.RequestedDate.HasValue ? Model.RequestedDate.Value.ToString("dd/MM/yyyy") : string.Empty)" />
+                    <label asp-for="RequestedDate"></label>
+                    <span asp-validation-for="RequestedDate" class="red-text"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s8">
+                    <textarea asp-for="RequestedServices" class="materialize-textarea validate"></textarea>
+                    <label asp-for="RequestedServices"></label>
+                    <span asp-validation-for="RequestedServices" class="red-text"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12 right-align">
+                    <button class="btn waves-effect waves-light btnSubmit" type="submit" name="action">
+                        Create
+                        <i class="material-icons right">send</i>
+                    </button>
+                </div>
+                <div class="row col s12 right-align red-text" asp-validation-summary="All"></div>
+            </div>
+        </form>
+
+        <div class="row"></div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('.datepicker').datepicker({
+                format: 'dd/mm/yyyy'
+            });
+
+            $('select').formSelect();
+            $('select[required]').css({ display: 'block', position: 'absolute', visibility: 'hidden' });
+
+            $('form').on('submit', function () {
+                const requestedDateInput = $('#RequestedDate');
+                const dateText = requestedDateInput.val();
+                if (dateText && dateText.indexOf('/') > -1) {
+                    const parts = dateText.split('/');
+                    if (parts.length === 3) {
+                        requestedDateInput.val(parts[2] + '-' + parts[1] + '-' + parts[0]);
+                    }
+                }
+            });
+        });
+    </script>
+}

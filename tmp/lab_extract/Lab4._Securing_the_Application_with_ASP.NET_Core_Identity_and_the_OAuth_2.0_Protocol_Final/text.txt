@@ -1,0 +1,261 @@
+Securing the Application with ASP.NET Core Identity and the OAuth 2.0 Protocol
+Creating and Setting Up the Admin Account
+Admin phải có quyền truy cập vào toàn bộ trang web và có thể quản lý dữ liệu trong toàn bộ ứng dụng. Quản trị viên cũng nên tạo và quản lý các kỹ sư dịch vụ. Trong phần này, bạn sẽ học cách bắt đầu với ASP.NET Core Identity, đánh giá tất cả các yếu tố cần thiết và tạo tài khoản Quản trị viên trong lần chạy đầu tiên của ứng dụng.
+AccountController là một thành phần quan trọng của toàn bộ cơ sở mã xác thực và được tạo theo mặc định bởi Visual Studio. Nó bao gồm các API và phương thức sau:
+UserManager: Đây là một phần của Microsoft.AspNetCore.Identity API do Microsoft cung cấp và nó cung cấp các API để quản lý người dùng trong một kho lưu trữ liên tục
+SigninManager: Đây là một phần của Microsoft.AspNetCore.Identity API do Microsoft cung cấp và nó cung cấp các API để quản lý hoạt động đăng nhập cho người dùng từ các nguồn khác nhau.
+IEmailSender, ISmsSender và ILogger:
+IEmailSender được AccountController sử dụng để gửi e-mail xác nhận tài khoản và đặt lại mật khẩu.
+ISmsSender được sử dụng để xác thực hai yếu tố.
+ILogger được sử dụng để ghi lại các thông báo và thông tin về quá trình đăng nhập của người dùng.
+Phương thức hành động: AccountController có các hành động bộ điều khiển mặc định được sử dụng để thực hiện các hoạt động liên quan đến xác thực khác nhau. Các hành động được sử dụng cho những việc sau: Đăng ký, Đăng nhập, Đăng xuất, Đăng nhập Nguồn Bên ngoài, Quên Mật khẩu, Đặt lại Mật khẩu, Xác thực Hai yếu tố và Gửi và Xác minh Mã
+Right Click project ASC.Web -> Add -> new Scaffolder Item -> Identity -> Identity -> Add
+Cấu trúc lại services
+Tạo class DependencyInjection
+Cập nhật Program.cs
+Xử lý Login, Logout, ResetPassword, ForgotPassword
+Create Area ServiceRequests : xử lý các nghiệp vụ liên quan đến yêu cầu dịch vụ
+Right Click  ASC.Web -> Add New Scaffolded Item -> MVC Area
+Cấu hình lại định tuyến Area => cập nhật program.cs
+Xử lý session
+Cài Microsoft.AspNetCore.Session từ nuget cho ASC.Web và ASC.Utilitis
+Tạo class SessionExtensions để lấy và lưu session
+Tạo class CurrentUser lưu trữ thông tin user hiện hành
+Tạo class ClaimsPrincipalExtensions để lấy thông tin user đăng nhập từ  ClaimsPrincipal
+Add session trong DependencyInjection.cs => phương thức AddMyDependencyGroup
+Cập nhật view  và code xử lý razor  login
+Cập nhật code xử lý Login.cshtml.cs
+Cập nhật lại Phương Thức GET của Login.cshtml.cs trong Areas.Identity.Pages.Account để clear đăng nhập và hiển thị form login.
+Cập nhật lại Phương Thức POST của Login.cshtml.cs trong Areas.Identity.Pages.Account để khi đăng nhập thành công thì điều hướng đến View dashboard.
+Cập nhật view Login.cshtml
+Tạo controler BaseController.cs  với thuộc tính Authorize trong thư mục ASC.Web.Controllers, để mọi hành động bên trong bộ điều khiển này hoặc trong bất kỳ bộ điều khiển nào được kế thừa từ BaseController này, đều yêu cầu đăng nhập
+Tạo controler  AnonymousController.cs không có thuộc tính Authorize trong thư mục ASC.Web.Controllers, cho phép các controller kế thừa không yêu cầu đăng nhập
+Tạo DashboardController.cs kế thừa từ BaseController trong ASC.Web.Area. ServiceRequests.Controllers. Tạo action Dashboard
+Tạo view cho action Dashboard (Dashboard.cshtml)
+Khi đó người dùng ẩn danh (anonymous  user) cố gắng truy view Dasboard.cshtml đều sẽ điều hướng đến trang Login page.
+Cập nhật HomeController.cs kế thừa từ AnonymousController và xóa action Dashboard.
+Khi đó bất cứ người dùn nào đều có thể truy vào các trang trong home mà không cần đăng nhập.
+Thêm mã RenderSection sau vào cuối _Layout.cshtml và _SecureLayout.cshtml để hỗ trợ phần tập lệnh JQuery, để truyền phần tập lệnh từ master layout vào các layout kế thừa.
+Cập nhật Style.css
+.input-field .input-validation-error {
+border-bottom: 1px solid #FF4081;
+box-shadow: 0 1px 0 0 #FF4081;
+}
+.input-field .valid {
+border-bottom: 1px solid #00E676;
+box-shadow: 0 1px 0 0 #00E676;
+}
+.validation-summary-errors {
+color: #FF4081;
+}
+Đảm bảo _MasterLayout.cshtml có tham chiếu JavaScript
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.0/jquery.validate.min.js"></script>
+Cập nhật _Layout.cshtml để khi click login hiển thị form đăng nhập
+Chạy ứng dụng và click vào Login
+Cập nhật lại Phương Thức POST của Login.cshtml.cs trong Areas.Identity.Pages.Account để khi đăng nhập thành công thì điều hướng đến View dashboard.
+Thực hiện đăng nhập với email và pass để truy cập vào Dashboard
+Xử lý Navigation động theo phân quyền
+Tạo Navigation.json lưu cấu trúc menu
+{
+"MenuItems": [
+{
+"DisplayName": "Dashboard",
+"MaterialIcon": "dashboard",
+"Link": "/ServiceRequests/Dashboard/Dashboard",
+"IsNested": false,
+"Sequence": 1,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": []
+},
+{
+"DisplayName": "User Administration",
+"MaterialIcon": "supervisor_account",
+"Link": "",
+"IsNested": true,
+"Sequence": 2,
+"UserRoles": [ "Admin" ],
+"NestedItems": [
+{
+"DisplayName": "Customers",
+"MaterialIcon": "account_box",
+"Link": "/Accounts/Account/Customers",
+"IsNested": false,
+"Sequence": 1,
+"UserRoles": [ "Admin" ],
+"NestedItems": []
+},
+{
+"DisplayName": "Service Engineers",
+"MaterialIcon": "person_add",
+"Link": "/Accounts/Account/ServiceEngineers",
+"IsNested": false,
+"Sequence": 2,
+"UserRoles": [ "Admin" ],
+"NestedItems": []
+}
+]
+},
+{
+"DisplayName": "Service Requests",
+"MaterialIcon": "local_laundry_service",
+"Link": "",
+"IsNested": true,
+"Sequence": 3,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": [
+{
+"DisplayName": "New Service Request",
+"MaterialIcon": "insert_invitation",
+"Link": "/ServiceRequests/ServiceRequest/ServiceRequest",
+"IsNested": false,
+"Sequence": 1,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": []
+}
+]
+},
+{
+"DisplayName": "Service Notifications",
+"MaterialIcon": "message",
+"Link": "/ServiceRequests/Dashboard/Dashboard",
+"IsNested": false,
+"Sequence": 4,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": []
+},
+{
+"DisplayName": "Promotions",
+"MaterialIcon": "inbox",
+"Link": "/ServiceRequests/Dashboard/Dashboard",
+"IsNested": false,
+"Sequence": 5,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": []
+},
+{
+"DisplayName": "Master Data",
+"MaterialIcon": "perm_data_setting",
+"Link": "",
+"IsNested": true,
+"Sequence": 6,
+"UserRoles": [ "Admin" ],
+"NestedItems": [
+{
+"DisplayName": "Master Keys",
+"MaterialIcon": "data_usage",
+"Link": "/Configuration/MasterData/MasterKeys",
+"IsNested": false,
+"Sequence": 1,
+"UserRoles": [ "Admin" ],
+"NestedItems": []
+},
+{
+"DisplayName": "Master Values",
+"MaterialIcon": "settings_system_daydream",
+"Link": "/Configuration/MasterData/MasterValues",
+"IsNested": false,
+"Sequence": 2,
+"UserRoles": [ "Admin" ],
+"NestedItems": []
+}
+]
+},
+{
+"DisplayName": "Settings",
+"MaterialIcon": "settings",
+"Link": "",
+"IsNested": true,
+"Sequence": 7,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": [
+{
+"DisplayName": "Profile",
+"MaterialIcon": "system_update_alt",
+"Link": "/Accounts/Account/Profile",
+"IsNested": false,
+"Sequence": 1,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": []
+},
+{
+"DisplayName": "Reset Password",
+"MaterialIcon": "lock_outline",
+"Link": "#!",
+"IsNested": false,
+"Sequence": 2,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": []
+}
+]
+},
+{
+"DisplayName": "Logout",
+"MaterialIcon": "exit_to_app",
+"Link": "#!",
+"IsNested": false,
+"Sequence": 8,
+"UserRoles": [ "User", "Engineer", "Admin" ],
+"NestedItems": []
+}
+]
+}
+Tạo class NavigationModels.cs để lưu trữ thông tin menu
+Xử lý đọc thông tin menu từ  Navigation.json vào hệ thống
+Tạo interface interface InavigationCacheOperations
+Tạo class NavigationCacheOperations
+Add service NavigationCacheOperations và Cache => cập nhật class DependencyInjection => phương thức AddMyDependencyGroup
+Đọc thông tin menu từ Navigation.jdon lưu vào bộ nhớ đệm (Cache)=>
+Cập program.cs
+Tạo LeftNavigationViewComponent.cs code xử lý cho mennu
+Tạo LeftNavigation View Component cho mennu
+Default.cshtml
+Cập nhật _SecureLayout.cshtml
+Cập nhật _SecureLayout.cshtml để xứ lý logout và resetpassword
+@section Scripts {
+@RenderSection("Scripts", required: false)
+<script type="text/javascript">
+$(function () {
+$('#ancrLogout').click(function () {
+$('#logout_form').submit();
+});
+$('#ancrResetPassword').click(function () {
+$('#resetPassword_form').submit();
+});
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function () {
+$('.collapsible').collapsible();
+});
+</script>
+}
+@RenderSection("Scripts", required: false)
+Cập nhật phương thức Post Logout.cshtml.cs trong Identity/Pages/Account
+Tạo Razor Page xử lý reset password InitiateResetPassword
+Right Account => Add new Item => Razor Page - Empty
+Cập nhật cử lý code
+InitiateResetPassword.cshtml.cs
+Chú ý IEmailSender  từ using ASC.Web.Services;
+Cập nhật Razor Page ResetPasswordEmailConfirmation.cshtml trong Account
+ResetPasswordEmailConfirmation.cshtml
+Xử lý gửi mail
+Cập nhật appsettings.json
+Sử dụng Nuget cài MailKit cho ASC.Web
+Cập nhật phương thức gửi mail từ gmail từ class AuthMessageSender
+Chạy lại ứng dụng và đăng nhập 2 loại tài khoản khác nhau:
+Tài khoản admin
+Tài khoản Engineer
+Thực hiện reset password
+Hiển thị màn hình xác nhận gửi đến địa chỉ mail
+Truy cập mail
+Và click vào link để truy cập màn hình ResetPassword
+Cập nhật xử lý code  ResetPassword.cshtml.cs
+Cập nhật view ResetPassword.cshtml
+Kết quả chạy
+Xử lý forgot password khi click vào form login
+//Account/Login.cshtml
+Cập nhật  view cho Account/ ForgotPassword.cshtml
+Cập nhật code xử lý  Account/ ForgotPassword.cshtml.cs
+Cập nhật init.js trong wwwroot/js  để chặn back and forward button và right-click
+Thực hiện chức năng forgot password
+Check email

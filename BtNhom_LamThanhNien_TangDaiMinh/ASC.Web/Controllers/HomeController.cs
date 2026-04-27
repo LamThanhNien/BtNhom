@@ -1,4 +1,4 @@
-﻿using ASC.Utilities;
+using ASC.Web.Configuration;
 using ASC.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -19,7 +19,7 @@ public class HomeController : AnonymousController
 
     public IActionResult Index()
     {
-        HttpContext.Session.SetObject("AppSettings", _settings.Value);
+        ViewBag.Title = _settings.Value.ApplicationTitle;
         return View();
     }
 
@@ -27,12 +27,13 @@ public class HomeController : AnonymousController
     {
         return View();
     }
-    public IActionResult Dashboard()
+
+    public IActionResult Contact()
     {
         return View();
     }
 
-    public IActionResult Contact()
+    public IActionResult Dashboard()
     {
         return View();
     }
