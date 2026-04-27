@@ -1,2 +1,0 @@
-Message(type='warning', message='An unrecognised element was ignored: v:stroke')
-Message(type='warning', message='Unrecognised paragraph style: List Paragraph (Style ID: ListParagraph)')
