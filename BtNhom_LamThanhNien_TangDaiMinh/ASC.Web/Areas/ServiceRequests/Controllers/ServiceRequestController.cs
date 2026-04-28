@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ASC.Web.Areas.ServiceRequests.Controllers;
 
 [Area("ServiceRequests")]
-[Authorize(Roles = "Admin,Engineer")]
+[Authorize(Roles = "Admin,Engineer,User")]
 public class ServiceRequestController : BaseController
 {
     private readonly IServiceRequestOperations _serviceRequestOperations;

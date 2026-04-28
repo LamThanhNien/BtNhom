@@ -51,7 +51,7 @@
           "Link": "/ServiceRequests/ServiceRequest/ServiceRequest",
           "IsNested": false,
           "Sequence": 1,
-          "UserRoles": [ "Admin", "Engineer" ],
+          "UserRoles": [ "Admin", "Engineer", "User" ],
           "NestedItems": []
         },
         {
