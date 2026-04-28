@@ -51,6 +51,15 @@
           "Link": "/ServiceRequests/ServiceRequest/ServiceRequest",
           "IsNested": false,
           "Sequence": 1,
+          "UserRoles": [ "Admin", "Engineer" ],
+          "NestedItems": []
+        },
+        {
+          "DisplayName": "Service Requests",
+          "MaterialIcon": "assignment",
+          "Link": "/ServiceRequests/Dashboard/Dashboard",
+          "IsNested": false,
+          "Sequence": 2,
           "UserRoles": [ "User" ],
           "NestedItems": []
         }
@@ -59,7 +68,7 @@
     {
       "DisplayName": "Service Notifications",
       "MaterialIcon": "message",
-      "Link": "/ServiceRequests/Dashboard/Dashboard",
+      "Link": "/ServiceNotifications/Notifications/Index",
       "IsNested": false,
       "Sequence": 4,
       "UserRoles": [ "User", "Engineer", "Admin" ],

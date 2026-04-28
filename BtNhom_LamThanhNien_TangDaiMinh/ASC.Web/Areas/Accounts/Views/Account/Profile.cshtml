@@ -1,32 +1,55 @@
-﻿@model ProfileModel
+@model ProfileModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "My Profile";
 }
 
-<div class="container section">
-    <h4>Profile</h4>
-
-    @if (TempData["SuccessMessage"] is string successMessage)
-    {
-        <div class="card-panel green lighten-4 green-text text-darken-4">@successMessage</div>
-    }
-
-    <form asp-action="Profile" method="post" class="col s12 m6">
-        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
-
-        <div class="input-field">
-            <input asp-for="UserName" />
-            <label asp-for="UserName" class="active"></label>
-            <span asp-validation-for="UserName" class="helper-text red-text"></span>
+<div class="row"></div>
+<div class="row padding-top-20px padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="section white-text padding-left-10px blue-grey lighten-1">
+            <h5>My Profile</h5>
         </div>
+        <div class="divider"></div>
 
-        <div class="input-field">
-            <input asp-for="Email" readonly />
-            <label asp-for="Email" class="active"></label>
-        </div>
+        @if (TempData["SuccessMessage"] is string successMsg)
+        {
+            <div class="row" style="padding:10px 16px 0;">
+                <div class="col s12">
+                    <div class="card-panel green lighten-4 green-text text-darken-4" style="padding:10px 16px;">
+                        <i class="material-icons left">check_circle</i>@successMsg
+                    </div>
+                </div>
+            </div>
+        }
 
-        <button type="submit" class="btn waves-effect waves-light">Update Profile</button>
-    </form>
+        <form asp-action="Profile" method="post" class="col s12">
+            @Html.AntiForgeryToken()
+            <div class="row col s12 right-align" asp-validation-summary="ModelOnly"></div>
+
+            <div class="row">
+                <div class="input-field col s12 m5">
+                    <i class="material-icons prefix">person</i>
+                    <input asp-for="UserName" id="UserName" class="validate" />
+                    <label asp-for="UserName" class="active">User Name</label>
+                    <span asp-validation-for="UserName" class="red-text helper-text"></span>
+                </div>
+                <div class="input-field col s12 m5 offset-m1">
+                    <i class="material-icons prefix">email</i>
+                    <input asp-for="Email" id="Email" class="validate" readonly />
+                    <label asp-for="Email" class="active">Email (read-only)</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12 right-align">
+                    <button class="btn waves-effect waves-light btnSubmit" type="submit">
+                        Update Profile
+                        <i class="material-icons right">save</i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 @section Scripts {

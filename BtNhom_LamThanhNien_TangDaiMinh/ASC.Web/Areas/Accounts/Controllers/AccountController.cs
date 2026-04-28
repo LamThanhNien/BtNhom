@@ -1,4 +1,5 @@
-﻿using ASC.Utilities;
+﻿using ASC.Model;
+using ASC.Utilities;
 using ASC.Web.Areas.Accounts.Models;
 using ASC.Web.Controllers;
 using ASC.Web.Services;
@@ -251,13 +252,9 @@ public class AccountController : BaseController
 
     private async Task<List<ServiceEngineerRegistrationViewModel>> GetServiceEngineersAsync()
     {
-        var engineerUsers = await _userManager.GetUsersInRoleAsync("Engineer");
-        var serviceEngineerUsers = await _userManager.GetUsersInRoleAsync("ServiceEngineer");
+        var engineerUsers = await _userManager.GetUsersInRoleAsync(Constants.ServiceEngineerRole);
 
         return engineerUsers
-            .Concat(serviceEngineerUsers)
-            .GroupBy(x => x.Id)
-            .Select(group => group.First())
             .OrderBy(x => x.Email)
             .Select(user => new ServiceEngineerRegistrationViewModel
             {

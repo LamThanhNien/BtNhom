@@ -1,58 +1,89 @@
-﻿@model CustomerViewModel
+@model CustomerViewModel
 @{
     ViewData["Title"] = "Customers";
 }
 
-<div class="container section">
-    <h4>Customers</h4>
+<div class="row"></div>
+<div class="row padding-top-20px padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="section white-text padding-left-10px blue-grey lighten-1">
+            <h5>Customers</h5>
+        </div>
+        <div class="divider"></div>
 
-    @if (TempData["SuccessMessage"] is string successMessage)
-    {
-        <div class="card-panel green lighten-4 green-text text-darken-4">@successMessage</div>
-    }
-    @if (TempData["ErrorMessage"] is string errorMessage)
-    {
-        <div class="card-panel red lighten-4 red-text text-darken-4">@errorMessage</div>
-    }
-
-    <table id="tblCustomers" class="striped">
-        <thead>
-            <tr>
-                <th>Email</th>
-                <th>User Name</th>
-                <th>Status</th>
-                <th>Update</th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var customer in Model.Customers)
+        @if (TempData["SuccessMessage"] is string successMsg)
         {
-            <tr>
-                <td>@customer.Email</td>
-                <td>@customer.UserName</td>
-                <td>@(customer.IsActive ? "Active" : "Inactive")</td>
-                <td>
-                    <form asp-action="Customers" method="post" class="inline-form">
-                        <input asp-for="Registration.Id" type="hidden" value="@customer.Id" />
-                        <input asp-for="Registration.Email" type="hidden" value="@customer.Email" />
-                        <input asp-for="Registration.UserName" type="hidden" value="@customer.UserName" />
-                        <input asp-for="Registration.IsActive" type="hidden" value="@(!customer.IsActive)" />
-                        <button type="submit" class="btn-small @(customer.IsActive ? "orange" : "green")">
-                            @(customer.IsActive ? "Deactivate" : "Activate")
-                        </button>
-                    </form>
-                </td>
-            </tr>
+            <div class="row" style="padding:10px 16px 0;">
+                <div class="col s12">
+                    <div class="card-panel green lighten-4 green-text text-darken-4" style="padding:10px 16px;">
+                        <i class="material-icons left">check_circle</i>@successMsg
+                    </div>
+                </div>
+            </div>
         }
-        </tbody>
-    </table>
+        @if (TempData["ErrorMessage"] is string errorMsg)
+        {
+            <div class="row" style="padding:10px 16px 0;">
+                <div class="col s12">
+                    <div class="card-panel red lighten-4 red-text text-darken-4" style="padding:10px 16px;">
+                        <i class="material-icons left">error</i>@errorMsg
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div class="col s12 padding-bottom-15px">
+            <table class="highlight centered" id="tblCustomers">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>User Name</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var customer in Model.Customers)
+                    {
+                        <tr>
+                            <td>@customer.Email</td>
+                            <td>@customer.UserName</td>
+                            <td>
+                                <i class="material-icons @(customer.IsActive ? "green-text" : "red-text")">
+                                    @(customer.IsActive ? "check_circle" : "cancel")
+                                </i>
+                                @(customer.IsActive ? "Active" : "Inactive")
+                            </td>
+                            <td>
+                                <form asp-action="Customers" method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input asp-for="Registration.Id" type="hidden" value="@customer.Id" />
+                                    <input asp-for="Registration.Email" type="hidden" value="@customer.Email" />
+                                    <input asp-for="Registration.UserName" type="hidden" value="@customer.UserName" />
+                                    <input asp-for="Registration.IsActive" type="hidden" value="@(!customer.IsActive)" />
+                                    <button type="submit"
+                                            class="btn-small waves-effect waves-light @(customer.IsActive ? "orange darken-1" : "teal")">
+                                        <i class="material-icons left tiny">@(customer.IsActive ? "lock" : "lock_open")</i>
+                                        @(customer.IsActive ? "Deactivate" : "Activate")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
-        $(function () {
+    <script>
+        $(document).ready(function () {
             if ($.fn.DataTable) {
-                $('#tblCustomers').DataTable();
+                $('#tblCustomers').DataTable({
+                    pageLength: 5,
+                    lengthMenu: [[5, 10, -1], [5, 10, 'All']]
+                });
             }
         });
     </script>

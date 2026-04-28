@@ -15,7 +15,8 @@
 
         return normalizedStatus switch
         {
-            "NEW" or "INITIATED" or "INPROGRESS" or "COMPLETED" => "white-text teal lighten-1 center-align",
+            "NEW" or "INITIATED" or "INPROGRESS" => "white-text teal lighten-1 center-align",
+            "COMPLETED" => "white-text green darken-1 center-align",
             "REQUESTFORINFORMATION" or "PENDING" or "DENIED" => "white-text red lighten-1 center-align",
             "PENDINGCUSTOMERAPPROVAL" => "white-text orange lighten-1 center-align",
             _ => "white-text blue-grey lighten-1 center-align"
@@ -77,7 +78,19 @@
                                         : serviceRequest.RequestedServices;
                                 <td title="@serviceRequest.RequestedServices">@trimText</td>
                             }
-                            <td><i class="small material-icons view cursor-hand">pageview</i></td>
+                            <td>
+                                <i class="small material-icons view cursor-hand"
+                                   data-rowkey="@serviceRequest.RowKey"
+                                   data-partitionkey="@serviceRequest.PartitionKey"
+                                   data-customer="@userDisplay"
+                                   data-vehiclename="@serviceRequest.VehicleName"
+                                   data-vehicletype="@serviceRequest.VehicleType"
+                                   data-status="@serviceRequest.Status"
+                                   data-requesteddate="@(serviceRequest.RequestedDate.HasValue ? serviceRequest.RequestedDate.Value.ToString("dd/MM/yyyy") : string.Empty)"
+                                   data-completeddate="@(serviceRequest.CompletedDate.HasValue ? serviceRequest.CompletedDate.Value.ToString("dd/MM/yyyy") : string.Empty)"
+                                   data-requestedservices="@serviceRequest.RequestedServices"
+                                   data-serviceengineer="@(serviceRequest.ServiceEngineer ?? string.Empty)">pageview</i>
+                            </td>
                         </tr>
                     }
                 </tbody>

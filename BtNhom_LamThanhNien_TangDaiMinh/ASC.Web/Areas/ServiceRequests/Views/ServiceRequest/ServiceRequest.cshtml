@@ -14,50 +14,60 @@
         </div>
         <div class="divider"></div>
 
-        <form asp-controller="ServiceRequest" asp-action="ServiceRequest" method="post" class="col s12">
+        <form id="formNewServiceRequest" asp-controller="ServiceRequest" asp-action="ServiceRequest" method="post" class="col s12">
             @Html.AntiForgeryToken()
             <div class="row">
-                <div class="input-field col s4">
-                    <select asp-for="VehicleName" asp-items="@(new SelectList(ViewBag.VehicleNames, "RowKey", "Name"))" required="required">
+                <div class="input-field col s12 m4">
+                    <select asp-for="CustomerEmail" asp-items="@(new SelectList((IEnumerable<string>)ViewBag.CustomerEmails))" required="required">
                         <option value="">Please select one</option>
                     </select>
-                    <label asp-for="VehicleName"></label>
-                    <span asp-validation-for="VehicleName" class="red-text"></span>
+                    <label asp-for="CustomerEmail" class="active"></label>
                 </div>
-                <div class="input-field col s4">
-                    <select asp-for="VehicleType" asp-items="@(new SelectList(ViewBag.VehicleTypes, "RowKey", "Name"))" required="required">
+                <div class="input-field col s12 m4">
+                    <select asp-for="VehicleName" asp-items="@(new SelectList(ViewBag.VehicleNames, "Name", "Name"))" required="required">
                         <option value="">Please select one</option>
                     </select>
-                    <label asp-for="VehicleType"></label>
-                    <span asp-validation-for="VehicleType" class="red-text"></span>
+                    <label asp-for="VehicleName" class="active"></label>
                 </div>
-                <div class="input-field col s4">
+                <div class="input-field col s12 m4">
+                    <select asp-for="VehicleType" asp-items="@(new SelectList(ViewBag.VehicleTypes, "Name", "Name"))" required="required">
+                        <option value="">Please select one</option>
+                    </select>
+                    <label asp-for="VehicleType" class="active"></label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12 m4 offset-m8">
                     <input asp-for="RequestedDate"
                            id="RequestedDate"
                            type="text"
                            class="datepicker"
                            value="@(Model.RequestedDate.HasValue ? Model.RequestedDate.Value.ToString("dd/MM/yyyy") : string.Empty)" />
-                    <label asp-for="RequestedDate"></label>
-                    <span asp-validation-for="RequestedDate" class="red-text"></span>
+                    <label asp-for="RequestedDate" class="active"></label>
                 </div>
             </div>
 
             <div class="row">
-                <div class="input-field col s8">
+                <div class="input-field col s12 m8">
                     <textarea asp-for="RequestedServices" class="materialize-textarea validate"></textarea>
-                    <label asp-for="RequestedServices"></label>
-                    <span asp-validation-for="RequestedServices" class="red-text"></span>
+                    <label asp-for="RequestedServices" class="active"></label>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="input-field col s12 right-align">
-                    <button class="btn waves-effect waves-light btnSubmit" type="submit" name="action">
-                        Create
-                        <i class="material-icons right">send</i>
+            <div class="row" style="margin-bottom: 0;">
+                <div class="col s12 m4 offset-m8 right-align">
+                    <button class="btn waves-effect waves-light teal" type="submit" name="action" style="min-width: 110px;">
+                        CREATE
+                        <i class="material-icons right">chevron_right</i>
                     </button>
                 </div>
-                <div class="row col s12 right-align red-text" asp-validation-summary="All"></div>
+            </div>
+
+            <div class="row" style="margin-top: 8px; margin-bottom: 0;">
+                <div class="col s12 m4 offset-m8 right-align">
+                    <div asp-validation-summary="All" class="new-request-validation-summary"></div>
+                </div>
             </div>
         </form>
 
@@ -67,16 +77,37 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <style>
+        .new-request-validation-summary ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .new-request-validation-summary li {
+            color: #ff4081;
+            font-size: 12px;
+            line-height: 1.55;
+        }
+    </style>
     <script>
         $(document).ready(function () {
             $('.datepicker').datepicker({
-                format: 'dd/mm/yyyy'
+                format: 'dd/mm/yyyy',
+                autoClose: true
             });
 
             $('select').formSelect();
             $('select[required]').css({ display: 'block', position: 'absolute', visibility: 'hidden' });
+            $('select[required]').on('change', function () {
+                $(this).valid();
+            });
 
-            $('form').on('submit', function () {
+            $('#RequestedDate, #RequestedServices').on('blur', function () {
+                $(this).valid();
+            });
+
+            $('#formNewServiceRequest').on('submit', function () {
                 const requestedDateInput = $('#RequestedDate');
                 const dateText = requestedDateInput.val();
                 if (dateText && dateText.indexOf('/') > -1) {
@@ -85,6 +116,8 @@
                         requestedDateInput.val(parts[2] + '-' + parts[1] + '-' + parts[0]);
                     }
                 }
+
+                return $(this).valid();
             });
         });
     </script>

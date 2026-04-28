@@ -30,14 +30,14 @@ namespace ASC.Business
                 .FindAsync(x => x.Id == rowKey && x.PartitionKey == partitionKey);
         }
 
-        public ServiceRequest UpdateServiceRequest(ServiceRequest request)
+        public async Task<ServiceRequest> UpdateServiceRequest(ServiceRequest request)
         {
-            _unitOfWork.Repository<ServiceRequest>().UpdateAsync(request).GetAwaiter().GetResult();
-            _unitOfWork.CommitAsync().GetAwaiter().GetResult();
+            await _unitOfWork.Repository<ServiceRequest>().UpdateAsync(request);
+            await _unitOfWork.CommitAsync();
             return request;
         }
 
-        public async Task<ServiceRequest> AssignServiceEngineerAsync(string rowKey, string partitionKey, string serviceEngineerEmail)
+        public async Task<ServiceRequest> AssignServiceEngineerAsync(string rowKey, string partitionKey, string serviceEngineerEmail, string updatedBy)
         {
             if (string.IsNullOrWhiteSpace(serviceEngineerEmail))
             {
@@ -47,11 +47,12 @@ namespace ASC.Business
             var serviceRequest = await GetServiceRequestAsync(rowKey, partitionKey);
             if (serviceRequest is null)
             {
-                throw new NullReferenceException();
+                throw new InvalidOperationException($"Service request '{rowKey}' not found for user '{partitionKey}'.");
             }
 
             serviceRequest.ServiceEngineer = serviceEngineerEmail;
             serviceRequest.Status = ASC.Model.Status.Initiated.ToString();
+            serviceRequest.UpdatedBy = updatedBy;
             serviceRequest.UpdatedDate = DateTime.UtcNow;
 
             await _unitOfWork.Repository<ServiceRequest>().UpdateAsync(serviceRequest);
@@ -59,16 +60,17 @@ namespace ASC.Business
             return serviceRequest;
         }
 
-        public async Task<ServiceRequest> UpdateServiceRequestStatusAsync(string rowKey, string partitionKey, string status)
+        public async Task<ServiceRequest> UpdateServiceRequestStatusAsync(string rowKey, string partitionKey, string status, string updatedBy)
         {
             var serviceRequest = await _unitOfWork.Repository<ServiceRequest>()
                 .FindAsync(x => x.Id == rowKey && x.PartitionKey == partitionKey);
             if (serviceRequest == null)
             {
-                throw new NullReferenceException();
+                throw new InvalidOperationException($"Service request '{rowKey}' not found for user '{partitionKey}'.");
             }
 
             serviceRequest.Status = status;
+            serviceRequest.UpdatedBy = updatedBy;
             serviceRequest.UpdatedDate = DateTime.UtcNow;
 
             if (string.Equals(status, ASC.Model.Status.Completed.ToString(), StringComparison.OrdinalIgnoreCase))

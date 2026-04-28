@@ -1,23 +1,39 @@
-﻿@model ServiceEngineerViewModel
+@model ServiceEngineerViewModel
 @{
     ViewData["Title"] = "Service Engineers";
 }
 
-<div class="container section">
-    <h4>Service Engineers</h4>
+<div class="row"></div>
+<div class="row padding-top-20px padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="section white-text padding-left-10px blue-grey lighten-1">
+            <h5>Service Engineers</h5>
+        </div>
+        <div class="divider"></div>
 
-    @if (TempData["SuccessMessage"] is string successMessage)
-    {
-        <div class="card-panel green lighten-4 green-text text-darken-4">@successMessage</div>
-    }
-    @if (TempData["ErrorMessage"] is string errorMessage)
-    {
-        <div class="card-panel red lighten-4 red-text text-darken-4">@errorMessage</div>
-    }
+        @if (TempData["SuccessMessage"] is string successMsg)
+        {
+            <div class="row" style="padding:10px 16px 0;">
+                <div class="col s12">
+                    <div class="card-panel green lighten-4 green-text text-darken-4" style="padding:10px 16px;">
+                        <i class="material-icons left">check_circle</i>@successMsg
+                    </div>
+                </div>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] is string errorMsg)
+        {
+            <div class="row" style="padding:10px 16px 0;">
+                <div class="col s12">
+                    <div class="card-panel red lighten-4 red-text text-darken-4" style="padding:10px 16px;">
+                        <i class="material-icons left">error</i>@errorMsg
+                    </div>
+                </div>
+            </div>
+        }
 
-    <div class="row">
-        <div class="col s12 m7">
-            <table id="tblServiceEngineers" class="striped">
+        <div class="col s12 padding-bottom-15px">
+            <table class="highlight centered" id="tblServiceEngineers">
                 <thead>
                     <tr>
                         <th>Email</th>
@@ -27,61 +43,83 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach (var engineer in Model.ServiceEngineers)
-                {
-                    <tr>
-                        <td>@engineer.Email</td>
-                        <td>@engineer.UserName</td>
-                        <td>@(engineer.IsActive ? "Active" : "Inactive")</td>
-                        <td>
-                            <button type="button"
-                                    class="btn-small blue edit-engineer"
-                                    data-id="@engineer.Id"
-                                    data-email="@engineer.Email"
-                                    data-username="@engineer.UserName"
-                                    data-active="@engineer.IsActive">
-                                Edit
-                            </button>
-                        </td>
-                    </tr>
-                }
+                    @foreach (var engineer in Model.ServiceEngineers)
+                    {
+                        <tr>
+                            <td>@engineer.Email</td>
+                            <td>@engineer.UserName</td>
+                            <td>
+                                <i class="material-icons @(engineer.IsActive ? "green-text" : "red-text")">
+                                    @(engineer.IsActive ? "check_circle" : "cancel")
+                                </i>
+                                @(engineer.IsActive ? "Active" : "Inactive")
+                            </td>
+                            <td>
+                                <a class="small material-icons edit-engineer cursor-hand"
+                                   data-id="@engineer.Id"
+                                   data-email="@engineer.Email"
+                                   data-username="@engineer.UserName"
+                                   data-active="@engineer.IsActive">mode_edit</a>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
-        <div class="col s12 m5">
-            <h5 id="engineer-form-title">Add / Update Engineer</h5>
-            <form asp-action="ServiceEngineers" method="post">
-                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+    </div>
+</div>
+
+<div class="row"></div>
+<div class="row padding-left-20px padding-right-20px">
+    <div class="row z-depth-3">
+        <div class="col s12 padding-0px">
+            <div class="section white-text padding-left-10px blue-grey lighten-1">
+                <h5 id="engineer-form-title">Add / Update Engineer</h5>
+            </div>
+            <div class="divider"></div>
+            <form asp-action="ServiceEngineers" method="post" class="col s12" id="formServiceEngineer">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="red-text" style="padding:8px 0;"></div>
                 <input asp-for="Registration.Id" type="hidden" id="Registration_Id" />
 
-                <div class="input-field">
-                    <input asp-for="Registration.Email" id="Registration_Email" />
-                    <label asp-for="Registration.Email"></label>
-                    <span asp-validation-for="Registration.Email" class="helper-text red-text"></span>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input asp-for="Registration.Email" id="Registration_Email" class="validate" />
+                        <label asp-for="Registration.Email">Email</label>
+                        <span asp-validation-for="Registration.Email" class="red-text helper-text"></span>
+                    </div>
+                    <div class="input-field col s4">
+                        <input asp-for="Registration.UserName" id="Registration_UserName" class="validate" />
+                        <label asp-for="Registration.UserName">User Name</label>
+                        <span asp-validation-for="Registration.UserName" class="red-text helper-text"></span>
+                    </div>
+                    <div class="input-field col s4">
+                        <input asp-for="Registration.Password" id="Registration_Password" type="password" class="validate" />
+                        <label asp-for="Registration.Password">Password</label>
+                        <span asp-validation-for="Registration.Password" class="red-text helper-text"></span>
+                    </div>
                 </div>
 
-                <div class="input-field">
-                    <input asp-for="Registration.UserName" id="Registration_UserName" />
-                    <label asp-for="Registration.UserName"></label>
-                    <span asp-validation-for="Registration.UserName" class="helper-text red-text"></span>
-                </div>
-
-                <div class="input-field">
-                    <input asp-for="Registration.Password" id="Registration_Password" />
-                    <label asp-for="Registration.Password"></label>
-                    <span asp-validation-for="Registration.Password" class="helper-text red-text"></span>
-                </div>
-
-                <p>
-                    <label>
-                        <input asp-for="Registration.IsActive" type="checkbox" id="Registration_IsActive" />
-                        <span>Is Active</span>
-                    </label>
-                </p>
-
-                <div class="datatable-actions">
-                    <button type="submit" class="btn waves-effect waves-light">Save</button>
-                    <button type="button" id="btnResetEngineer" class="btn grey">Reset</button>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <div class="switch">
+                            <label>
+                                Is Active
+                                <input asp-for="Registration.IsActive" id="Registration_IsActive" />
+                                <span class="lever"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-field col s8 right-align">
+                        <button class="btn waves-effect waves-light btnSubmit" type="submit" name="action">
+                            Save
+                            <i class="material-icons right">send</i>
+                        </button>
+                        <button class="btn waves-effect waves-light red lighten-1 reset" type="button">
+                            Reset
+                            <i class="material-icons right">refresh</i>
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -90,33 +128,38 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script type="text/javascript">
-        $(function () {
+    <script>
+        $(document).ready(function () {
             if ($.fn.DataTable) {
-                $('#tblServiceEngineers').DataTable();
+                $('#tblServiceEngineers').DataTable({
+                    pageLength: 5,
+                    lengthMenu: [[5, 10, -1], [5, 10, 'All']]
+                });
             }
 
             function resetEngineerForm() {
+                $('#formServiceEngineer')[0].reset();
                 $('#Registration_Id').val('');
-                $('#Registration_Email').val('');
-                $('#Registration_UserName').val('');
-                $('#Registration_Password').val('');
-                $('#Registration_IsActive').prop('checked', true);
                 $('#engineer-form-title').text('Add / Update Engineer');
                 M.updateTextFields();
             }
 
-            $('.edit-engineer').on('click', function () {
-                $('#Registration_Id').val($(this).data('id'));
-                $('#Registration_Email').val($(this).data('email'));
-                $('#Registration_UserName').val($(this).data('username'));
+            $(document).on('click', '.reset', function () {
+                resetEngineerForm();
+            });
+
+            $(document).on('click', '.edit-engineer', function () {
+                const el = $(this);
+                const isActive = el.data('active') === true || el.data('active') === 'True';
+
+                $('#Registration_Id').val(el.data('id'));
+                $('#Registration_Email').val(el.data('email')).addClass('valid');
+                $('#Registration_UserName').val(el.data('username')).addClass('valid');
                 $('#Registration_Password').val('');
-                $('#Registration_IsActive').prop('checked', $(this).data('active') === true || $(this).data('active') === 'True');
+                $('#Registration_IsActive').prop('checked', isActive);
                 $('#engineer-form-title').text('Update Engineer');
                 M.updateTextFields();
             });
-
-            $('#btnResetEngineer').on('click', resetEngineerForm);
         });
     </script>
 }

@@ -7,7 +7,7 @@ namespace ASC.DataAccess
     public class UnitOfWork : IUnitOfWork
     {
         private readonly DbContext _dbContext;
-        private IDbContextTransaction _transaction;
+        private IDbContextTransaction? _transaction;
         private readonly Dictionary<Type, object> _repositories = new();
 
         public UnitOfWork(DbContext dbContext)

@@ -4,6 +4,7 @@ using ASC.Web.Areas.ServiceRequests.Models;
 using ASC.Web.Controllers;
 using ASC.Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASC.Web.Areas.ServiceRequests.Controllers;
@@ -14,11 +15,16 @@ public class DashboardController : BaseController
 {
     private readonly IServiceRequestOperations _serviceRequestOperations;
     private readonly IMasterDataCacheOperations _masterData;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public DashboardController(IServiceRequestOperations operations, IMasterDataCacheOperations masterData)
+    public DashboardController(
+        IServiceRequestOperations operations,
+        IMasterDataCacheOperations masterData,
+        UserManager<IdentityUser> userManager)
     {
         _serviceRequestOperations = operations;
         _masterData = masterData;
+        _userManager = userManager;
     }
 
     public async Task<IActionResult> Dashboard()
@@ -42,13 +48,13 @@ public class DashboardController : BaseController
         if (HttpContext.User.IsInRole(Constants.AdminRole))
         {
             serviceRequests = await _serviceRequestOperations.GetServiceRequestsByRequestedDateAndStatus(
-                DateTime.UtcNow.AddDays(-7),
+                DateTime.UtcNow.AddYears(-1),
                 status);
         }
         else if (HttpContext.User.IsInRole(Constants.ServiceEngineerRole))
         {
             serviceRequests = await _serviceRequestOperations.GetServiceRequestsByRequestedDateAndStatus(
-                DateTime.UtcNow.AddDays(-7),
+                DateTime.UtcNow.AddYears(-1),
                 status,
                 serviceEngineerEmail: currentUserEmail);
         }
@@ -59,11 +65,19 @@ public class DashboardController : BaseController
                 email: currentUserEmail);
         }
 
+        var engineers = await _userManager.GetUsersInRoleAsync(Constants.ServiceEngineerRole);
+        var engineerEmails = engineers
+            .Where(e => e.Email != null)
+            .Select(e => e.Email!)
+            .OrderBy(e => e)
+            .ToList();
+
         return View(new DashboardViewModel
         {
             ServiceRequests = serviceRequests
                 .OrderByDescending(p => p.RequestedDate)
-                .ToList()
+                .ToList(),
+            ServiceEngineerEmails = engineerEmails
         });
     }
 
@@ -88,9 +102,13 @@ public class DashboardController : BaseController
             return NotFound();
         }
 
+        var currentUser = User.ToCurrentUser();
+        var currentUserEmail = !string.IsNullOrWhiteSpace(currentUser.Email)
+            ? currentUser.Email
+            : currentUser.UserName;
+
         if (HttpContext.User.IsInRole(Constants.ServiceEngineerRole))
         {
-            var currentUserEmail = User.ToCurrentUser().Email;
             if (string.IsNullOrWhiteSpace(currentUserEmail) ||
                 !string.Equals(serviceRequest.ServiceEngineer, currentUserEmail, StringComparison.OrdinalIgnoreCase))
             {
@@ -98,7 +116,7 @@ public class DashboardController : BaseController
             }
         }
 
-        await _serviceRequestOperations.UpdateServiceRequestStatusAsync(rowKey, partitionKey, normalizedStatus);
+        await _serviceRequestOperations.UpdateServiceRequestStatusAsync(rowKey, partitionKey, normalizedStatus, currentUserEmail);
         return RedirectToAction(nameof(Dashboard));
     }
 
@@ -114,7 +132,12 @@ public class DashboardController : BaseController
             return BadRequest();
         }
 
-        await _serviceRequestOperations.AssignServiceEngineerAsync(rowKey, partitionKey, serviceEngineerEmail.Trim());
+        var currentUser = User.ToCurrentUser();
+        var currentUserEmail = !string.IsNullOrWhiteSpace(currentUser.Email)
+            ? currentUser.Email
+            : currentUser.UserName;
+
+        await _serviceRequestOperations.AssignServiceEngineerAsync(rowKey, partitionKey, serviceEngineerEmail.Trim(), currentUserEmail);
         return RedirectToAction(nameof(Dashboard));
     }
 

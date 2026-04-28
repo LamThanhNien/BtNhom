@@ -52,7 +52,7 @@ namespace ASC.DataAccess
             return result;
         }
 
-        public async Task<T> FindAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> FindAsync(Expression<Func<T, bool>> predicate)
         {
             return await _dbSet.AsNoTracking().FirstOrDefaultAsync(predicate);
         }
@@ -62,7 +62,7 @@ namespace ASC.DataAccess
             return await _dbSet.AsNoTracking().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T?> GetByIdAsync(string id)
         {
             return await _dbSet.FindAsync(id);
         }

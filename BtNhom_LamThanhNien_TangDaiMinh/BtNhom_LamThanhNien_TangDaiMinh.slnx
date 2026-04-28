@@ -5,5 +5,4 @@
   <Project Path="ASC.Tests/ASC.Tests.csproj" />
   <Project Path="ASC.Utilities/ASC.Utilities.csproj" />
   <Project Path="ASC.Web/ASC.Web.csproj" />
-  <Project Path="BenchmarkSuite1/BenchmarkSuite1.csproj" />
 </Solution>

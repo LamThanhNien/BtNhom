@@ -3,6 +3,10 @@
     Layout = "_SecureLayout";
     ViewData["Title"] = "Service Requests";
 
+    var isAdmin = User.IsInRole("Admin");
+    var isEngineer = User.IsInRole("Engineer");
+    var allStatuses = Enum.GetNames(typeof(ASC.Model.Status));
+
     var partialViewData = new ViewDataDictionary(ViewData)
     {
         ["SectionName"] = "Service Requests",
@@ -13,6 +17,134 @@
 
 <div class="row"></div>
 @await Html.PartialAsync("_ServiceRequestGrid", Model.ServiceRequests, partialViewData)
+
+<!-- Service Request Detail Modal -->
+<div id="modalServiceRequest" class="modal modal-fixed-footer" style="width:65%; max-height:88%;">
+    <div class="modal-content">
+        <h5 class="blue-grey-text text-darken-2">
+            <i class="material-icons left" style="margin-top:4px;">build</i> Service Request Details
+        </h5>
+        <div class="divider" style="margin-bottom:16px;"></div>
+
+        <!-- Basic Info -->
+        <div class="row" style="margin-bottom:0;">
+            <div class="col s12 m6">
+                <p style="margin:6px 0;">
+                    <span class="blue-grey-text text-lighten-1">Customer</span><br>
+                    <strong id="modal-customer"></strong>
+                </p>
+                <p style="margin:6px 0;">
+                    <span class="blue-grey-text text-lighten-1">Vehicle Name</span><br>
+                    <strong id="modal-vehicleName"></strong>
+                </p>
+                <p style="margin:6px 0;">
+                    <span class="blue-grey-text text-lighten-1">Vehicle Type</span><br>
+                    <strong id="modal-vehicleType"></strong>
+                </p>
+            </div>
+            <div class="col s12 m6">
+                <p style="margin:6px 0;">
+                    <span class="blue-grey-text text-lighten-1">Status</span><br>
+                    <span id="modal-status" class="chip white-text" style="font-size:13px;"></span>
+                </p>
+                <p style="margin:6px 0;">
+                    <span class="blue-grey-text text-lighten-1">Requested Date</span><br>
+                    <strong id="modal-requestedDate"></strong>
+                </p>
+                <p style="margin:6px 0;">
+                    <span class="blue-grey-text text-lighten-1">Completed Date</span><br>
+                    <strong id="modal-completedDate"></strong>
+                </p>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:8px;">
+            <div class="col s12">
+                <span class="blue-grey-text text-lighten-1">Service Engineer</span><br>
+                <strong id="modal-serviceEngineer" class="teal-text"></strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <span class="blue-grey-text text-lighten-1">Requested Services</span>
+                <p id="modal-requestedServices"
+                   class="grey lighten-4 grey-text text-darken-3"
+                   style="padding:10px 14px; border-radius:4px; min-height:48px; white-space:pre-wrap; margin-top:6px;"></p>
+            </div>
+        </div>
+
+        @if (isAdmin)
+        {
+            <!-- Admin: Assign Service Engineer -->
+            <div class="row" id="div-assign-engineer">
+                <div class="col s12">
+                    <div class="divider"></div>
+                    <h6 class="blue-grey-text text-darken-1" style="margin-top:14px;">
+                        <i class="material-icons left tiny">person_add</i> Assign Service Engineer
+                    </h6>
+                </div>
+                <form id="formAssignEngineer" asp-controller="Dashboard" asp-action="AssignServiceEngineer" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="assign-rowKey" name="rowKey" />
+                    <input type="hidden" id="assign-partitionKey" name="partitionKey" />
+                    <div class="input-field col s8">
+                        <select id="assign-engineer-select" name="serviceEngineerEmail">
+                            <option value="" disabled selected>-- Select Engineer --</option>
+                            @foreach (var email in Model.ServiceEngineerEmails)
+                            {
+                                <option value="@email">@email</option>
+                            }
+                        </select>
+                        <label>Service Engineer</label>
+                    </div>
+                    <div class="col s4" style="padding-top:22px;">
+                        <button type="submit" class="btn waves-effect waves-light teal">
+                            Assign <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        }
+
+        @if (isAdmin || isEngineer)
+        {
+            <!-- Admin/Engineer: Update Status -->
+            <div class="row" id="div-update-status">
+                <div class="col s12">
+                    <div class="divider"></div>
+                    <h6 class="blue-grey-text text-darken-1" style="margin-top:14px;">
+                        <i class="material-icons left tiny">update</i> Update Status
+                    </h6>
+                </div>
+                <form id="formUpdateStatus" asp-controller="Dashboard" asp-action="UpdateStatus" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="status-rowKey" name="rowKey" />
+                    <input type="hidden" id="status-partitionKey" name="partitionKey" />
+                    <div class="input-field col s8">
+                        <select id="status-select" name="status">
+                            @foreach (var s in allStatuses)
+                            {
+                                <option value="@s">@s</option>
+                            }
+                        </select>
+                        <label>New Status</label>
+                    </div>
+                    <div class="col s4" style="padding-top:22px;">
+                        <button type="submit" class="btn waves-effect waves-light blue-grey darken-1">
+                            Update <i class="material-icons right">check</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        }
+    </div>
+    <div class="modal-footer">
+        <a href="#!" class="modal-close waves-effect waves-teal btn-flat blue-grey-text">
+            <i class="material-icons left">close</i>Close
+        </a>
+    </div>
+</div>
 
 @section Scripts {
     <script>
@@ -29,6 +161,57 @@
 
             $('#tblServiceRequests').css('width', '100%');
             $("select[name='tblServiceRequests_length']").formSelect();
+
+            $('.modal').modal();
+
+            const statusColorMap = {
+                'NEW': 'teal lighten-1',
+                'INITIATED': 'teal',
+                'INPROGRESS': 'teal darken-1',
+                'COMPLETED': 'green darken-1',
+                'REQUESTFORINFORMATION': 'red lighten-1',
+                'PENDING': 'red lighten-2',
+                'DENIED': 'red darken-1',
+                'PENDINGCUSTOMERAPPROVAL': 'orange darken-1'
+            };
+
+            $('#tblServiceRequests').on('click', '.view', function () {
+                const el = $(this);
+                const customer = el.data('customer') || '';
+                const status = el.data('status') || '';
+                const engineer = el.data('serviceengineer') || '';
+                const completed = el.data('completeddate') || '';
+
+                $('#modal-customer').text(customer);
+                $('#modal-vehicleName').text(el.data('vehiclename') || '');
+                $('#modal-vehicleType').text(el.data('vehicletype') || '');
+                $('#modal-requestedDate').text(el.data('requesteddate') || '');
+                $('#modal-completedDate').text(completed || 'Not completed');
+                $('#modal-requestedServices').text(el.data('requestedservices') || '');
+                $('#modal-serviceEngineer').text(engineer || 'Not assigned');
+
+                const statusEl = $('#modal-status');
+                statusEl.text(status);
+                const colorKey = status.replace(/\s/g, '').toUpperCase();
+                statusEl.attr('class', 'chip white-text ' + (statusColorMap[colorKey] || 'blue-grey'));
+
+                const rowKey = el.data('rowkey');
+                const partitionKey = el.data('partitionkey');
+                $('#assign-rowKey').val(rowKey);
+                $('#assign-partitionKey').val(partitionKey);
+                $('#status-rowKey').val(rowKey);
+                $('#status-partitionKey').val(partitionKey);
+
+                if (engineer) {
+                    $('#assign-engineer-select').val(engineer);
+                } else {
+                    $('#assign-engineer-select').prop('selectedIndex', 0);
+                }
+                $('#status-select').val(status);
+
+                $('select').formSelect();
+                $('#modalServiceRequest').modal('open');
+            });
         });
     </script>
 }

@@ -6,9 +6,9 @@ namespace ASC.Business.Interfaces
     {
         Task CreateServiceRequestAsync(ServiceRequest request);
         Task<ServiceRequest?> GetServiceRequestAsync(string rowKey, string partitionKey);
-        ServiceRequest UpdateServiceRequest(ServiceRequest request);
-        Task<ServiceRequest> AssignServiceEngineerAsync(string rowKey, string partitionKey, string serviceEngineerEmail);
-        Task<ServiceRequest> UpdateServiceRequestStatusAsync(string rowKey, string partitionKey, string status);
+        Task<ServiceRequest> UpdateServiceRequest(ServiceRequest request);
+        Task<ServiceRequest> AssignServiceEngineerAsync(string rowKey, string partitionKey, string serviceEngineerEmail, string updatedBy);
+        Task<ServiceRequest> UpdateServiceRequestStatusAsync(string rowKey, string partitionKey, string status, string updatedBy);
         Task<List<ServiceRequest>> GetServiceRequestsByRequestedDateAndStatus(
             DateTime? requestedDate,
             List<string>? status = null,
