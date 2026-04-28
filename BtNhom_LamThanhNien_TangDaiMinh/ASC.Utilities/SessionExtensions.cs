@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
@@ -5,20 +6,17 @@ namespace ASC.Utilities;
 
 public static class SessionExtensions
 {
-    public static void SetObject<T>(this ISession session, string key, T value)
+    public static void SetSession(this ISession session, string key, object value)
     {
-        var json = JsonSerializer.Serialize(value);
-        session.SetString(key, json);
+        session.Set(key, Encoding.ASCII.GetBytes(JsonSerializer.Serialize(value)));
     }
 
-    public static T? GetObject<T>(this ISession session, string key)
+    public static T? GetSession<T>(this ISession session, string key)
     {
-        var json = session.GetString(key);
-        if (string.IsNullOrWhiteSpace(json))
+        if (session.TryGetValue(key, out byte[]? value))
         {
-            return default;
+            return JsonSerializer.Deserialize<T>(Encoding.ASCII.GetString(value));
         }
-
-        return JsonSerializer.Deserialize<T>(json);
+        return default;
     }
 }

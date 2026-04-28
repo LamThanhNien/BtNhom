@@ -1,45 +1,54 @@
 using Microsoft.AspNetCore.Http;
-using System.Diagnostics.CodeAnalysis;
 
-namespace ASC.Tests;
+namespace ASC.Tests.TestUtilities;
 
 public class FakeSession : ISession
 {
-    private readonly Dictionary<string, byte[]> _store = new(StringComparer.Ordinal);
+    public bool IsAvailable => throw new NotImplementedException();
+    public string Id => throw new NotImplementedException();
+    public IEnumerable<string> Keys => throw new NotImplementedException();
 
-    public IEnumerable<string> Keys => _store.Keys;
-
-    public string Id { get; } = Guid.NewGuid().ToString();
-
-    public bool IsAvailable => true;
+    private readonly Dictionary<string, byte[]> sessionFactory = new Dictionary<string, byte[]>();
 
     public void Clear()
     {
-        _store.Clear();
+        throw new NotImplementedException();
     }
 
     public Task CommitAsync(CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        throw new NotImplementedException();
     }
 
     public Task LoadAsync(CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        throw new NotImplementedException();
     }
 
     public void Remove(string key)
     {
-        _store.Remove(key);
+        throw new NotImplementedException();
     }
 
     public void Set(string key, byte[] value)
     {
-        _store[key] = value;
+        if (!sessionFactory.ContainsKey(key))
+            sessionFactory.Add(key, value);
+        else
+            sessionFactory[key] = value;
     }
 
-    public bool TryGetValue(string key, [NotNullWhen(true)] out byte[]? value)
+    public bool TryGetValue(string key, out byte[]? value)
     {
-        return _store.TryGetValue(key, out value);
+        if (sessionFactory.ContainsKey(key) && sessionFactory[key] != null)
+        {
+            value = sessionFactory[key];
+            return true;
+        }
+        else
+        {
+            value = null;
+            return false;
+        }
     }
 }

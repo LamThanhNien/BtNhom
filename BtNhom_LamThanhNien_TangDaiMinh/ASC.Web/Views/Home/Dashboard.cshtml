@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        @if (User.IsInRole("User"))
+        @if (User.IsInRole("Admin") || User.IsInRole("Engineer"))
         {
             <div class="col s12 m4">
                 <div class="card hoverable z-depth-2">

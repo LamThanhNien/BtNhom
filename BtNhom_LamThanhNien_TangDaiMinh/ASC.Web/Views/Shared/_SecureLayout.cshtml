@@ -1,7 +1,8 @@
+@using ASC.Web.Extensions
 @{
     Layout = "_MasterLayout";
+    var currentUser = User.GetCurrentUserDetails();
 }
-@using System.Security.Claims
 
 <header class="secureLayout">
     <nav class="top-nav blue-grey lighten-1">
@@ -18,9 +19,9 @@
     <li>
         <div class="user-view">
             <div class="background blue-grey lighten-1"></div>
-            <a href="#user"><img class="circle" src="~/images/male.png" /></a>
-            <a href="#name"><span class="white-text name">@User.Identity?.Name</span></a>
-            <a href="#email"><span class="white-text email">@User.FindFirst(ClaimTypes.Email)?.Value</span></a>
+            <a href="#!user"><img class="circle" src="~/images/male.png" /></a>
+            <a href="#!name"><span class="white-text name">@currentUser.UserName</span></a>
+            <a href="#!email"><span class="white-text email">@currentUser.Email</span></a>
         </div>
     </li>
     @await Component.InvokeAsync("LeftNavigation")

@@ -35,19 +35,17 @@ namespace ASC.Business
 
             if (status != null && status.Count > 0)
             {
-                var normalizedStatuses = status
+                var validStatuses = status
                     .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .Select(s => s.Replace(" ", string.Empty).ToUpper())
                     .Distinct()
                     .ToList();
 
-                if (normalizedStatuses.Count > 0)
+                if (validStatuses.Count > 0)
                 {
                     var statusQueries = (Expression<Func<ServiceRequest, bool>>)(u => false);
-                    foreach (var state in normalizedStatuses)
+                    foreach (var state in validStatuses)
                     {
-                        var statusFilter = (Expression<Func<ServiceRequest, bool>>)(u =>
-                            (u.Status ?? string.Empty).Replace(" ", string.Empty).ToUpper() == state);
+                        var statusFilter = (Expression<Func<ServiceRequest, bool>>)(u => u.Status == state);
                         statusQueries = statusQueries.Or(statusFilter);
                     }
 

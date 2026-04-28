@@ -34,7 +34,7 @@ namespace ASC.Web.Areas.Configuration.Controllers
             var masterKeys = await _masterData.GetAllMasterKeysAsync();
             var viewModel = _mapper.Map<List<MasterDataKeyViewModel>>(masterKeys);
 
-            HttpContext.Session.SetObject("MasterKeys", viewModel);
+            HttpContext.Session.SetSession("MasterKeys", viewModel);
 
             return View(new MasterKeysViewModel
             {
@@ -48,7 +48,7 @@ namespace ASC.Web.Areas.Configuration.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MasterKeys(MasterKeysViewModel model)
         {
-            model.MasterKeys = HttpContext.Session.GetObject<List<MasterDataKeyViewModel>>("MasterKeys") ?? new List<MasterDataKeyViewModel>();
+            model.MasterKeys = HttpContext.Session.GetSession<List<MasterDataKeyViewModel>>("MasterKeys") ?? new List<MasterDataKeyViewModel>();
 
             if (!ModelState.IsValid)
             {

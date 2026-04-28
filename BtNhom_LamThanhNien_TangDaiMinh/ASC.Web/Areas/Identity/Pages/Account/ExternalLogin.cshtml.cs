@@ -204,7 +204,7 @@ public class ExternalLoginModel : PageModel
     private async Task SetCurrentUserSessionAsync(IdentityUser user)
     {
         var roles = await _userManager.GetRolesAsync(user);
-        HttpContext.Session.SetObject(CurrentUser.SessionKey, new CurrentUser
+        HttpContext.Session.SetSession(CurrentUser.SessionKey, new CurrentUser
         {
             UserId = user.Id,
             UserName = user.UserName ?? user.Email ?? string.Empty,

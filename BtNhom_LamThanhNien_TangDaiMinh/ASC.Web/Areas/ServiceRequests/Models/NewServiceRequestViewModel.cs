@@ -5,10 +5,6 @@ namespace ASC.Web.Areas.ServiceRequests.Models
     public class NewServiceRequestViewModel
     {
         [Required]
-        [Display(Name = "Customer Email")]
-        public string CustomerEmail { get; set; } = string.Empty;
-
-        [Required]
         [Display(Name = "Vehicle Name")]
         public string VehicleName { get; set; } = string.Empty;
 

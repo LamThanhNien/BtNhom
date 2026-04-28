@@ -1,64 +1,70 @@
+using ASC.Tests.TestUtilities;
+using ASC.Utilities;
 using ASC.Web.Configuration;
 using ASC.Web.Controllers;
-using ASC.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Moq;
 
 namespace ASC.Tests;
 
 public class HomeControllerTests
 {
-    [Fact]
-    public void Index_ReturnsViewResult_AndSetsApplicationTitle()
+    private readonly Mock<IOptions<ApplicationSettings>> optionsMock;
+    private readonly Mock<HttpContext> mockHttpContext;
+
+    public HomeControllerTests()
     {
-        var controller = CreateController();
+        // Create an instance of Mock IOptions
+        optionsMock = new Mock<IOptions<ApplicationSettings>>();
 
-        var result = controller.Index();
+        mockHttpContext = new Mock<HttpContext>();
+        // Set FakeSession to HttpContext Session.
+        mockHttpContext.Setup(p => p.Session).Returns(new FakeSession());
 
-        var view = Assert.IsType<ViewResult>(result);
-        Assert.Null(view.Model);
-        Assert.Equal("Automobile Service Center", controller.ViewBag.Title);
-    }
-
-    [Fact]
-    public void Privacy_ReturnsViewResult()
-    {
-        var controller = CreateController();
-
-        var result = controller.Privacy();
-
-        var view = Assert.IsType<ViewResult>(result);
-        Assert.Null(view.Model);
-    }
-
-    [Fact]
-    public void Error_ReturnsViewResult_WithErrorModel()
-    {
-        var controller = CreateController();
-
-        var result = controller.Error();
-
-        var view = Assert.IsType<ViewResult>(result);
-        Assert.IsType<ErrorViewModel>(view.Model);
-    }
-
-    private static HomeController CreateController()
-    {
-        var settings = Options.Create(new ApplicationSettings
+        // Set IOptions<> Values property to return ApplicationSettings object
+        optionsMock.Setup(ap => ap.Value).Returns(new ApplicationSettings
         {
-            ApplicationTitle = "Automobile Service Center"
+            ApplicationTitle = "ASC"
         });
+    }
 
-        var controller = new HomeController(NullLogger<HomeController>.Instance, settings)
-        {
-            ControllerContext = new ControllerContext
-            {
-                HttpContext = new DefaultHttpContext()
-            }
-        };
+    [Fact]
+    public void HomeController_Index_View_Test()
+    {
+        // Home controller instantiated with Mock IOptions<> object
+        var controller = new HomeController(optionsMock.Object);
+        controller.ControllerContext.HttpContext = mockHttpContext.Object;
+        // Assert return ViewResult
+        Assert.IsType<ViewResult>(controller.Index());
+    }
 
-        return controller;
+    [Fact]
+    public void HomeController_Index_NoModel_Test()
+    {
+        var controller = new HomeController(optionsMock.Object);
+        controller.ControllerContext.HttpContext = mockHttpContext.Object;
+        // Assert Model for Null
+        Assert.Null((controller.Index() as ViewResult)?.ViewData.Model);
+    }
+
+    [Fact]
+    public void HomeController_Index_Validation_Test()
+    {
+        var controller = new HomeController(optionsMock.Object);
+        controller.ControllerContext.HttpContext = mockHttpContext.Object;
+        // Assert ModelState Error Count to 0
+        Assert.Equal(0, (controller.Index() as ViewResult)?.ViewData.ModelState.ErrorCount);
+    }
+
+    [Fact]
+    public void HomeController_Index_Session_Test()
+    {
+        var controller = new HomeController(optionsMock.Object);
+        controller.ControllerContext.HttpContext = mockHttpContext.Object;
+        controller.Index();
+        // Session value with key "Test" should not be null.
+        Assert.NotNull(controller.HttpContext.Session.GetSession<ApplicationSettings>("Test"));
     }
 }
